@@ -3,13 +3,22 @@ package fr.afpa;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Side;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TableColumn;
@@ -19,9 +28,21 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 public class FXMLViewController implements Initializable {
+    private static final Pattern PHONE_NUMBER_REGEX = Pattern.compile("^[0-9]{10}$");
+    private static final Pattern EMAIL_REGEX = Pattern.compile(
+            "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?",
+            Pattern.CASE_INSENSITIVE);
+
+    private static boolean isPhoneNumberValid(String phoneNumber) {
+        return PHONE_NUMBER_REGEX.matcher(phoneNumber).matches();
+    }
+
+    private static boolean isEmailValid(String email) {
+        return EMAIL_REGEX.matcher(email).matches();
+    }
 
     private ObservableList<Contact> ContactData = FXCollections.observableArrayList();
-    
+
     @FXML
     private TableView<Contact> TVContact;
     @FXML
@@ -46,7 +67,7 @@ public class FXMLViewController implements Initializable {
     private TableColumn<Contact, String> columnPostalCode;
     @FXML
     private TableColumn<Contact, String> columnGithub;
-    
+
     @FXML
     private TextField textFieldNom;
     @FXML
@@ -73,6 +94,8 @@ public class FXMLViewController implements Initializable {
     private Button button_save;
     @FXML
     private Button button_delete;
+    @FXML
+    private Label errorText;
 
     @FXML
     private void handleButtonActionSave(ActionEvent event) {
@@ -88,23 +111,50 @@ public class FXMLViewController implements Initializable {
         String postalCode = textFieldPostalCode.getText();
         String github = textFieldGithub.getText();
 
-        if (!name.isEmpty() && !surname.isEmpty() && !city.isEmpty() && birthday != null) {
-            Contact newContact = new Contact(name, surname, city, gender, birthday, nickname, phoneNumber, phoneNumberProfessional, email, postalCode, github);
-            ContactData.add(newContact);
-            TVContact.getItems().add(newContact);
+        errorText.setText("");
 
-            textFieldNom.clear();
-            textFieldPrenom.clear();
-            textFieldVille.clear();
-            splitMenuButtonGender.setText("Genre");
-            datePickerBirthday.setValue(null);
-            textFieldNickname.clear();
-            textFieldPhoneNumber.clear();
-            textFieldPhoneNumberProfessional.clear();
-            textFieldEmail.clear();
-            textFieldPostalCode.clear();
-            textFieldGithub.clear();
+        if (name.isEmpty() || surname.isEmpty() || city.isEmpty() || gender.equals( "Genre")  || postalCode.isEmpty()
+                || !isPhoneNumberValid(phoneNumber) || !isEmailValid(email)) {
+            if (name.isEmpty()) {
+                errorText.setText("Le champ nom est obligatoire.\n");
+            }
+            if (surname.isEmpty()) {
+                errorText.setText(errorText.getText() + "Le champ prénom est obligatoire.\n");
+            }
+            if (city.isEmpty()) {
+                errorText.setText(errorText.getText() + "Le champ ville est obligatoire.\n");
+            }
+            if (gender.equals("Genre")) {
+                errorText.setText(errorText.getText() + "Le champ genre  est obligatoire.\n");
+            }
+            if (postalCode.isEmpty()) {
+                errorText.setText("Le code postal est obligatoire.\n");
+            }
+            if (!isPhoneNumberValid(phoneNumber)) {
+                errorText.setText(errorText.getText() + "Le numéro de téléphone n'est pas valide.\n");
+            }
+            if (!isEmailValid(email)) {
+                errorText.setText(errorText.getText() + "L'email n'est pas valide.\n");
+            }
+           
+            return;
         }
+
+        Contact newContact = new Contact(name, surname, city, gender, birthday, nickname, phoneNumber,
+                phoneNumberProfessional, email, postalCode, github);
+        ContactData.add(newContact);
+
+        textFieldNom.clear();
+        textFieldPrenom.clear();
+        textFieldVille.clear();
+        splitMenuButtonGender.setText("Genre");
+        datePickerBirthday.setValue(null);
+        textFieldNickname.clear();
+        textFieldPhoneNumber.clear();
+        textFieldPhoneNumberProfessional.clear();
+        textFieldEmail.clear();
+        textFieldPostalCode.clear();
+        textFieldGithub.clear();
     }
 
     @FXML
@@ -120,15 +170,6 @@ public class FXMLViewController implements Initializable {
         textFieldEmail.clear();
         textFieldPostalCode.clear();
         textFieldGithub.clear();
-    }
-
-    @FXML
-    private void handleButtonActionDelete(ActionEvent event) {
-        Contact selectedContact = TVContact.getSelectionModel().getSelectedItem();
-        if (selectedContact != null) {
-            ContactData.remove(selectedContact);
-            TVContact.getItems().remove(selectedContact);
-        }
     }
 
     @FXML
@@ -151,9 +192,10 @@ public class FXMLViewController implements Initializable {
         columnPostalCode.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
         columnGithub.setCellValueFactory(new PropertyValueFactory<>("github"));
 
-        
-        ContactData.add(new Contact("Reese", "Kyle", "Bordeaux", "Men", LocalDate.of(1990, 1, 1), "Reezy", "123456789", "987654321", "reese@example.com", "33000", "reeseGithub"));
-        ContactData.add(new Contact("Smith", "John", "Berlin", "Men", LocalDate.of(1985, 5, 15), "Johnny", "123123123", "321321321", "john@example.com", "10115", "johnGithub"));
+        ContactData.add(new Contact("Reese", "Kyle", "Bordeaux", "Men", LocalDate.of(1990, 1, 1), "Reezy", "123456789",
+                "987654321", "reese@example.com", "33000", "reeseGithub"));
+        ContactData.add(new Contact("Smith", "John", "Berlin", "Men", LocalDate.of(1985, 5, 15), "Johnny", "123123123",
+                "321321321", "john@example.com", "10115", "johnGithub"));
 
         TVContact.setItems(ContactData);
     }
