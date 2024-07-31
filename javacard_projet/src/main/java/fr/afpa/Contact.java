@@ -11,7 +11,7 @@ public class Contact {
 
     private StringProperty name;
     private StringProperty surname;
-    private StringProperty address;
+    private StringProperty city;
     private StringProperty gender;
     private ObjectProperty<LocalDate> birthday;
     private StringProperty phoneNumber;
@@ -24,7 +24,7 @@ public class Contact {
     public Contact() {
         this.name = new SimpleStringProperty("");
         this.surname = new SimpleStringProperty("");
-        this.address = new SimpleStringProperty("");
+        this.city = new SimpleStringProperty("");
         this.gender = new SimpleStringProperty("");
         this.birthday = new SimpleObjectProperty<>(LocalDate.now());
         this.nickname = new SimpleStringProperty("");
@@ -35,10 +35,10 @@ public class Contact {
         this.github = new SimpleStringProperty("");
     }
 
-    public Contact(String name, String surname, String address, String gender, LocalDate birthday, String nickname, String phoneNumber, String phoneNumberProfessional, String email, String postalCode, String github) {
+    public Contact(String name, String surname, String city, String gender, LocalDate birthday, String nickname, String phoneNumber, String phoneNumberProfessional, String email, String postalCode, String github) {
         this.name = new SimpleStringProperty(name);
         this.surname = new SimpleStringProperty(surname);
-        this.address = new SimpleStringProperty(address);
+        this.city = new SimpleStringProperty(city);
         this.gender = new SimpleStringProperty(gender);
         this.birthday = new SimpleObjectProperty<>(birthday);
         this.nickname = new SimpleStringProperty(nickname);
@@ -73,16 +73,16 @@ public class Contact {
         return surname;
     }
 
-    public String getAddress() {
-        return this.address.get();
+    public String getCity() {
+        return this.city.get();
     }
 
-    public void setAddress(String address) {
-        this.address.set(address);
+    public void setAddress(String city) {
+        this.city.set(city);
     }
 
-    public StringProperty addressProperty() {
-        return address;
+    public StringProperty cityProperty() {
+        return city;
     }
 
     public String getGender() {
