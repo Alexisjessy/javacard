@@ -18,6 +18,7 @@ public class Contact {
     private StringProperty phoneNumberProfessional;
     private StringProperty nickname;
     private StringProperty email;
+    private StringProperty city;
     private StringProperty postalCode;
     private StringProperty github;
 
@@ -31,11 +32,12 @@ public class Contact {
         this.phoneNumber = new SimpleStringProperty("");
         this.phoneNumberProfessional = new SimpleStringProperty("");
         this.email = new SimpleStringProperty("");
+        this.city = new SimpleStringProperty("");
         this.postalCode = new SimpleStringProperty("");
         this.github = new SimpleStringProperty("");
     }
 
-    public Contact(String name, String surname, String address, String gender, LocalDate birthday, String nickname, String phoneNumber, String phoneNumberProfessional, String email, String postalCode, String github) {
+    public Contact(String name, String surname, String address, String gender, LocalDate birthday, String nickname, String phoneNumber, String phoneNumberProfessional, String email, String city, String postalCode, String github) {
         this.name = new SimpleStringProperty(name);
         this.surname = new SimpleStringProperty(surname);
         this.address = new SimpleStringProperty(address);
@@ -45,8 +47,17 @@ public class Contact {
         this.phoneNumber = new SimpleStringProperty(phoneNumber);
         this.phoneNumberProfessional = new SimpleStringProperty(phoneNumberProfessional);
         this.email = new SimpleStringProperty(email);
+        this.city = new SimpleStringProperty(city);
         this.postalCode = new SimpleStringProperty(postalCode);
         this.github = new SimpleStringProperty(github);
+    }
+
+    public StringProperty getCity() {
+        return city;
+    }
+
+    public void setCity(StringProperty city) {
+        this.city = city;
     }
 
     public String getName() {
