@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.time.LocalDate;
 
 /**
  * JavaFX App
@@ -33,6 +34,15 @@ public class App extends Application {
 
     public static void main(String[] args) {
         launch();
+
+        //Sérialisation JSON
+        Contact contact = new Contact()
+        contact.setName("Toto");
+        contact.setSurname("Tata");
+        contact.setAddress("69 rue toto");
+        contact.setGender("Male");
+        contact., LocalDate.of(2000, 2, 4), "Tota", "123456789",
+                "987654321", "john.doe@example.com", "Bordeaux", "12345", "johnDoeGitHub");
     }
 
 }

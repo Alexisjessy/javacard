@@ -4,6 +4,7 @@ package fr.afpa;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -169,6 +170,12 @@ public class ListContactController {
 
         }
     }
+
+    // //regex github
+    // private static final Pattern GITHUB_REGEX = Pattern.compile("/<a.*?href\\s*=\\s*[\"\\']([^\"\\'>]+)[\"\\'][^>]*>.*?word.*?<\\/a>/si");
+    // private static boolean isGithub(String github) {
+    //     return GITHUB_REGEX.matcher(github).matches();
+    // }
 
   
        

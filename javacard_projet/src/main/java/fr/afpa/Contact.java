@@ -5,9 +5,10 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Contact {
+public class Contact implements Serializable{
 
     private StringProperty name;
     private StringProperty surname;
