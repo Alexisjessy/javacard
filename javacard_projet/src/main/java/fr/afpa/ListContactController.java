@@ -132,24 +132,6 @@ public class ListContactController {
 
     }
 
-    // }
-
-    // }
-
-    // contact -> contact.getName().toLowerCase().contains(contact) ||
-    // contact.getSurname().toLowerCase().contains(contact) ||
-    // contact.getAddress().toLowerCase().contains(contact) ||
-    // contact.getGender().toLowerCase().contains(contact) ||
-    // contact.getBirthday().toLowerCase().contains(contact) ||
-    // contact.getPhoneNumber().toLowerCase().contains(contact) ||
-    // contact.getPhoneNumberProfessional().toLowerCase().contains(contact) ||
-    // contact.getNickname().toLowerCase().contains(contact) ||
-    // contact.getCity().toLowerCase().contains(contact) ||
-    // contact.getEmail().toLowerCase().contains(contact) ||
-    // contact.getPostalCode().toLowerCase().contains(contact) ||
-    // contact.getGithub().toLowerCase().contains(contact)
-    // );
-
     // Méthode pour effacer le champ de la recherche et réinitialiser la liste des
     // contacts
     @FXML
