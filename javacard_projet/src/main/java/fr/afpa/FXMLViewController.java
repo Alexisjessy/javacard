@@ -26,13 +26,19 @@ public class FXMLViewController implements Initializable {
     private static final Pattern EMAIL_REGEX = Pattern.compile(
             "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?",
             Pattern.CASE_INSENSITIVE);
-
+    
+    private static final Pattern GITHUB_REGEX = Pattern.compile("/<a.*?href\\s*=\\s*[\"\\']([^\"\\'>]+)[\"\\'][^>]*>.*?word.*?<\\/a>/si");
+    
     private static boolean isPhoneNumberValid(String phoneNumber) {
         return PHONE_NUMBER_REGEX.matcher(phoneNumber).matches();
     }
 
     private static boolean isEmailValid(String email) {
         return EMAIL_REGEX.matcher(email).matches();
+    }
+
+    private static boolean isGithub(String github) {
+        return GITHUB_REGEX.matcher(github).matches();
     }
 
     private ObservableList<Contact> contacts = FXCollections.observableArrayList();
