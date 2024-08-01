@@ -27,7 +27,7 @@ public class FXMLViewController implements Initializable {
             "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?",
             Pattern.CASE_INSENSITIVE);
     
-    private static final Pattern GITHUB_REGEX = Pattern.compile("/<a.*?href\\s*=\\s*[\"\\']([^\"\\'>]+)[\"\\'][^>]*>.*?word.*?<\\/a>/si");
+    // private static final Pattern GITHUB_REGEX = Pattern.compile("/<a.*?href\\s*=\\s*[\"\\']([^\"\\'>]+)[\"\\'][^>]*>.*?word.*?<\\/a>/si");
     
     private static boolean isPhoneNumberValid(String phoneNumber) {
         return PHONE_NUMBER_REGEX.matcher(phoneNumber).matches();
@@ -37,9 +37,9 @@ public class FXMLViewController implements Initializable {
         return EMAIL_REGEX.matcher(email).matches();
     }
 
-    private static boolean isGithub(String github) {
-        return GITHUB_REGEX.matcher(github).matches();
-    }
+    // private static boolean isGithub(String github) {
+    //     return GITHUB_REGEX.matcher(github).matches();
+    // }
 
     private ObservableList<Contact> contacts = FXCollections.observableArrayList();
 
@@ -148,7 +148,7 @@ public class FXMLViewController implements Initializable {
 
         /*  Serialize contacts after adding a new one */
         ContactSerialization.serializeContacts(contacts, "contacts.ser");
-
+        
         textFieldNom.clear();
         textFieldPrenom.clear();
         textFieldVille.clear();
