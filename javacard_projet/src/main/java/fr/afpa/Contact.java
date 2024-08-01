@@ -25,7 +25,7 @@ public class Contact implements Comparable<Contact>, Serializable {
     private transient StringProperty postalCode;
     private transient StringProperty github;
 
-    /*  Fields for serialization */
+    /* Fields for serialization */
     private String nameSerialized;
     private String surnameSerialized;
     private String citySerialized;
@@ -53,7 +53,7 @@ public class Contact implements Comparable<Contact>, Serializable {
     }
 
     public Contact(String name, String surname, String city, String gender, LocalDate birthday, String nickname,
-                   String phoneNumber, String phoneNumberProfessional, String email, String postalCode, String github) {
+            String phoneNumber, String phoneNumberProfessional, String email, String postalCode, String github) {
         this.name = new SimpleStringProperty(name);
         this.surname = new SimpleStringProperty(surname);
         this.city = new SimpleStringProperty(city);
@@ -204,7 +204,10 @@ public class Contact implements Comparable<Contact>, Serializable {
         surnameSerialized = surname.get();
         citySerialized = city.get();
         genderSerialized = gender.get();
-        birthdaySerialized = birthday.get().format(DateTimeFormatter.ISO_LOCAL_DATE);
+        if (birthday.get() != null) {
+
+            birthdaySerialized = birthday.get().format(DateTimeFormatter.ISO_LOCAL_DATE);
+        }
         phoneNumberSerialized = phoneNumber.get();
         phoneNumberProfessionalSerialized = phoneNumberProfessional.get();
         nicknameSerialized = nickname.get();
@@ -220,7 +223,11 @@ public class Contact implements Comparable<Contact>, Serializable {
         this.surname = new SimpleStringProperty(surnameSerialized);
         this.city = new SimpleStringProperty(citySerialized);
         this.gender = new SimpleStringProperty(genderSerialized);
-        this.birthday = new SimpleObjectProperty<>(LocalDate.parse(birthdaySerialized, DateTimeFormatter.ISO_LOCAL_DATE));
+        if (birthdaySerialized != null) {
+            this.birthday = new SimpleObjectProperty<>(
+                    LocalDate.parse(birthdaySerialized, DateTimeFormatter.ISO_LOCAL_DATE));
+        }
+
         this.phoneNumber = new SimpleStringProperty(phoneNumberSerialized);
         this.phoneNumberProfessional = new SimpleStringProperty(phoneNumberProfessionalSerialized);
         this.nickname = new SimpleStringProperty(nicknameSerialized);

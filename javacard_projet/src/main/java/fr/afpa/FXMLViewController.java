@@ -26,9 +26,10 @@ public class FXMLViewController implements Initializable {
     private static final Pattern EMAIL_REGEX = Pattern.compile(
             "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?",
             Pattern.CASE_INSENSITIVE);
-    
-    // private static final Pattern GITHUB_REGEX = Pattern.compile("/<a.*?href\\s*=\\s*[\"\\']([^\"\\'>]+)[\"\\'][^>]*>.*?word.*?<\\/a>/si");
-    
+
+    private static final Pattern GITHUB_REGEX = Pattern
+            .compile("/<a.*?href\\s*=\\s*[\"\\']([^\"\\'>]+)[\"\\'][^>]*>.*?word.*?<\\/a>/si");
+
     private static boolean isPhoneNumberValid(String phoneNumber) {
         return PHONE_NUMBER_REGEX.matcher(phoneNumber).matches();
     }
@@ -37,9 +38,9 @@ public class FXMLViewController implements Initializable {
         return EMAIL_REGEX.matcher(email).matches();
     }
 
-    // private static boolean isGithub(String github) {
-    //     return GITHUB_REGEX.matcher(github).matches();
-    // }
+    private static boolean isGithub(String github) {
+        return GITHUB_REGEX.matcher(github).matches();
+    }
 
     private ObservableList<Contact> contacts = FXCollections.observableArrayList();
 
@@ -110,11 +111,17 @@ public class FXMLViewController implements Initializable {
         String email = textFieldEmail.getText();
         String postalCode = textFieldPostalCode.getText();
         String github = textFieldGithub.getText();
-        /* 
-         Validation of data form
+
+        if (!github.isEmpty() && !isGithub(github)) {
+            errorText.setText(errorText.getText() + "L'adresse Github n'est pas valide.\n");
+
+        }
+
+        /*
+         * Validation of data form
          */
         errorText.setText("");
-         
+
         if (name.isEmpty() || surname.isEmpty() || city.isEmpty() || gender.equals("Genre") || postalCode.isEmpty()
                 || !isPhoneNumberValid(phoneNumber) || !isEmailValid(email)) {
             if (name.isEmpty()) {
@@ -146,9 +153,9 @@ public class FXMLViewController implements Initializable {
                 phoneNumberProfessional, email, postalCode, github);
         contacts.add(newContact);
 
-        /*  Serialize contacts after adding a new one */
+        /* Serialize contacts after adding a new one */
         ContactSerialization.serializeContacts(contacts, "contacts.ser");
-        
+
         textFieldNom.clear();
         textFieldPrenom.clear();
         textFieldVille.clear();
@@ -185,6 +192,14 @@ public class FXMLViewController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        // textFieldNom.setText("EJ");
+        // textFieldPrenom.setText("EJ");
+        // textFieldEmail.setText("al@gmail.com");
+        // textFieldNickname.setText("EJ");
+        // textFieldPhoneNumber.setText("0554525251");
+        // textFieldPostalCode.setText("EJ");
+        // textFieldVille.setText("EJ");
+        // textFieldNickname.setText("EJ");
         columnName.setCellValueFactory(new PropertyValueFactory<>("name"));
         columnSurname.setCellValueFactory(new PropertyValueFactory<>("surname"));
         columnCity.setCellValueFactory(new PropertyValueFactory<>("city"));
@@ -197,7 +212,7 @@ public class FXMLViewController implements Initializable {
         columnPostalCode.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
         columnGithub.setCellValueFactory(new PropertyValueFactory<>("github"));
 
-        /*  Deserialize contacts during initialization */
+        /* Deserialize contacts during initialization */
         String filename = "contacts.ser";
         List<Contact> deserializedContacts = ContactSerialization.deserializeContacts(filename);
         contacts.addAll(deserializedContacts);
