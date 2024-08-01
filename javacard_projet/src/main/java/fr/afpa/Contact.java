@@ -5,30 +5,74 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
-public class Contact implements Serializable{
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+@JsonAutoDetect
+
+public class Contact implements Comparable<Contact>, Serializable {
 
     private StringProperty name;
     private StringProperty surname;
-    private StringProperty address;
+    private StringProperty city;
     private StringProperty gender;
-    private ObjectProperty<LocalDate> birthday;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
+    private LocalDate birthday;
+    ///private StringProperty birthday;
     private StringProperty phoneNumber;
     private StringProperty phoneNumberProfessional;
     private StringProperty nickname;
     private StringProperty email;
-    private StringProperty city;
     private StringProperty postalCode;
     private StringProperty github;
+    private StringProperty address;
+
+    // private transient StringProperty name;
+    // private transient StringProperty surname;
+    // private transient StringProperty city;
+    // private transient StringProperty gender;
+    // private transient ObjectProperty<LocalDate> birthday;
+    // private transient StringProperty phoneNumber;
+    // private transient StringProperty phoneNumberProfessional;
+    // private transient StringProperty nickname;
+    // private transient StringProperty email;
+    // private transient StringProperty postalCode;
+    // private transient StringProperty github;
+    // private transient StringProperty address;
+
+    // /* Fields for serialization binaire */
+    private String nameSerialized;
+    private String surnameSerialized;
+    private String citySerialized;
+    private String genderSerialized;
+    private String birthdaySerialized;
+    private String phoneNumberSerialized;
+    private String phoneNumberProfessionalSerialized;
+    private String nicknameSerialized;
+    private String emailSerialized;
+    private String postalCodeSerialized;
+    private String githubSerialized;
+    private String addressSerialired;
 
     public Contact() {
         this.name = new SimpleStringProperty("");
         this.surname = new SimpleStringProperty("");
         this.address = new SimpleStringProperty("");
         this.gender = new SimpleStringProperty("");
-        this.birthday = new SimpleObjectProperty<>(LocalDate.now());
+        this.birthday = new SimpleObjectProperty<T>(LocalDate);
+        // if (this.birthday != null){
+
+        // }
         this.nickname = new SimpleStringProperty("");
         this.phoneNumber = new SimpleStringProperty("");
         this.phoneNumberProfessional = new SimpleStringProperty("");
@@ -36,14 +80,21 @@ public class Contact implements Serializable{
         this.city = new SimpleStringProperty("");
         this.postalCode = new SimpleStringProperty("");
         this.github = new SimpleStringProperty("");
+        this.address = new SimpleStringProperty("");
     }
 
-    public Contact(String name, String surname, String address, String gender, LocalDate birthday, String nickname, String phoneNumber, String phoneNumberProfessional, String email, String city, String postalCode, String github) {
+    public Contact(String name, String surname, String address, String gender, String birthday, String nickname,
+            String phoneNumber, String phoneNumberProfessional, String email, String city, String postalCode,
+            String github) {
         this.name = new SimpleStringProperty(name);
         this.surname = new SimpleStringProperty(surname);
         this.address = new SimpleStringProperty(address);
         this.gender = new SimpleStringProperty(gender);
-        this.birthday = new SimpleObjectProperty<>(birthday);
+        // if (this.birthday != null){
+
+        // }
+        // this.birthday.get().format(DateTimeFormatter.ISO_LOCAL_DATE);
+        this.birthday = new SimpleStringProperty(birthday);
         this.nickname = new SimpleStringProperty(nickname);
         this.phoneNumber = new SimpleStringProperty(phoneNumber);
         this.phoneNumberProfessional = new SimpleStringProperty(phoneNumberProfessional);
@@ -53,12 +104,16 @@ public class Contact implements Serializable{
         this.github = new SimpleStringProperty(github);
     }
 
-    public StringProperty getCity() {
-        return city;
+    public String getCity() {
+        return this.city.get();
     }
 
-    public void setCity(StringProperty city) {
-        this.city = city;
+    public void setCity(String city) {
+        this.city.set(city);
+    }
+
+    public StringProperty cityProperty() {
+        return city;
     }
 
     public String getName() {
@@ -109,15 +164,15 @@ public class Contact implements Serializable{
         return gender;
     }
 
-    public LocalDate getBirthday() {
-        return this.birthday.get();
+    public StringProperty getBirthday() {
+        return birthday;
     }
 
-    public void setBirthday(LocalDate birthday) {
+    public void setBirthday(String birthday) {
         this.birthday.set(birthday);
     }
 
-    public ObjectProperty<LocalDate> birthdayProperty() {
+    public StringProperty birthdayProperty() {
         return birthday;
     }
 
@@ -191,5 +246,53 @@ public class Contact implements Serializable{
 
     public StringProperty githubProperty() {
         return github;
+    }
+
+    // // //Serialisation JSON
+    // private void writeObject(ObjectOutputStream oos) throws IOException {
+    // nameSerialized = name.get();
+    // surnameSerialized = surname.get();
+    // citySerialized = city.get();
+    // genderSerialized = gender.get();
+    // if (birthday.get() != null) {
+    // birthdaySerialized = birthday.get().format(DateTimeFormatter.ISO_LOCAL_DATE);
+    // }
+
+    // phoneNumberSerialized = phoneNumber.get();
+    // phoneNumberProfessionalSerialized = phoneNumberProfessional.get();
+    // nicknameSerialized = nickname.get();
+    // emailSerialized = email.get();
+    // postalCodeSerialized = postalCode.get();
+    // githubSerialized = github.get();
+    // addressSerialired = address.get();
+    // oos.defaultWriteObject();
+    // }
+
+    // private void readObject(ObjectInputStream ois) throws ClassNotFoundException,
+    // IOException {
+    // ois.defaultReadObject();
+    // this.name = new SimpleStringProperty(nameSerialized);
+    // this.surname = new SimpleStringProperty(surnameSerialized);
+    // this.city = new SimpleStringProperty(citySerialized);
+    // this.gender = new SimpleStringProperty(genderSerialized);
+    // if (birthdaySerialized != null) {
+    // this.birthday = new SimpleObjectProperty<>(
+    // LocalDate.parse(birthdaySerialized, DateTimeFormatter.ISO_LOCAL_DATE));
+    // }
+
+    // this.phoneNumber = new SimpleStringProperty(phoneNumberSerialized);
+    // this.phoneNumberProfessional = new
+    // SimpleStringProperty(phoneNumberProfessionalSerialized);
+    // this.nickname = new SimpleStringProperty(nicknameSerialized);
+    // this.email = new SimpleStringProperty(emailSerialized);
+    // this.postalCode = new SimpleStringProperty(postalCodeSerialized);
+    // this.github = new SimpleStringProperty(githubSerialized);
+    // this.address = new SimpleStringProperty(addressSerialired);
+    // }
+
+    @Override
+    public int compareTo(Contact o) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'compareTo'");
     }
 }

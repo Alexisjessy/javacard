@@ -1,10 +1,7 @@
 package fr.afpa;
 
-
-
 import java.time.LocalDate;
 import java.util.List;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -76,6 +73,7 @@ public class ListContactController {
     // Initialisation des objets avec les champs correspondants en colonne
     @FXML
     private void initialize() {
+       // searchTextField.setText("toti");
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         surnameColumn.setCellValueFactory(new PropertyValueFactory<>("surname"));
         address.setCellValueFactory(new PropertyValueFactory<>("address"));
@@ -90,10 +88,10 @@ public class ListContactController {
         githubColumn.setCellValueFactory(new PropertyValueFactory<>("github"));
 
         // Implementation
-        contacts.add(new Contact("Toto", "Tata", "69 rue toto", "Male", LocalDate.of(2000, 2, 4), "Tota", "123456789",
-                "987654321", "john.doe@example.com", "Bordeaux", "12345", "johnDoeGitHub"));
-        contacts.add(new Contact("Titi", "Tutu", "56 rue titi", "Female", LocalDate.of(2002, 9, 24), "Titu",
-                "123456789", "987654321", "jane.doe@example.com", "Begles", "12345", "janeDoeGitHub"));
+        contacts.add(new Contact("Toto", "Tata", "69 rue toto", "Male", "20/01/09", "Tota", "123456789",
+                "987654321", "john.doe@example.com", "Bordeaux", "12345", "https://github.com/Hadja-Hawa-BAH/"));
+        contacts.add(new Contact("Titi", "Tutu", "56 rue titi", "Female", "20/01/09", "Titu",
+                "123456789", "987654321", "jane.doe@example.com", "Begles", "12345", "https://github.com/Hadja-Hawa-BAH/"));
 
         tableView.setItems(contacts);
     }
@@ -121,7 +119,7 @@ public class ListContactController {
         List<Contact> filteredContacts = contacts.stream()
                 .filter(contact -> contact.getName().toLowerCase().contains(searchText) ||
                         contact.getSurname().toLowerCase().contains(searchText) ||
-                        contact.getAddress().toLowerCase().contains(searchText) ||
+                       // contact.getAddress().toLowerCase().contains(searchText) ||
                         // contact.getBirthday().toLowerCase().contains(searchText) ||
                         contact.getEmail().toLowerCase().contains(searchText) ||
                         contact.getNickname().toLowerCase().contains(searchText) ||
@@ -133,26 +131,7 @@ public class ListContactController {
 
     }
 
-    // }
-
-    // }
-
-    // contact -> contact.getName().toLowerCase().contains(contact) ||
-    // contact.getSurname().toLowerCase().contains(contact) ||
-    // contact.getAddress().toLowerCase().contains(contact) ||
-    // contact.getGender().toLowerCase().contains(contact) ||
-    // contact.getBirthday().toLowerCase().contains(contact) ||
-    // contact.getPhoneNumber().toLowerCase().contains(contact) ||
-    // contact.getPhoneNumberProfessional().toLowerCase().contains(contact) ||
-    // contact.getNickname().toLowerCase().contains(contact) ||
-    // contact.getCity().toLowerCase().contains(contact) ||
-    // contact.getEmail().toLowerCase().contains(contact) ||
-    // contact.getPostalCode().toLowerCase().contains(contact) ||
-    // contact.getGithub().toLowerCase().contains(contact)
-    // );
-
-    // Méthode pour effacer le champ de la recherche et réinitialiser la liste des
-    // contacts
+    // Méthode pour effacer le champ de la recherche et réinitialiser la liste des contacts
     @FXML
     public void clearSearch(ActionEvent event) {
         searchTextField.clear();
@@ -170,12 +149,24 @@ public class ListContactController {
 
         }
     }
+    
+    //Méthode pour exporter 
+    private void export(ActionEvent event){
+        Contact selectedContact = tableView.getSelectionModel().getSelectedItem();
+        if (selectedContact != null) {
+            contacts.addAll(contacts);
+        }else {
+            System.out.println("Veuiller selectionner le contact à exporter");
+        }
 
-    // //regex github
-    // private static final Pattern GITHUB_REGEX = Pattern.compile("/<a.*?href\\s*=\\s*[\"\\']([^\"\\'>]+)[\"\\'][^>]*>.*?word.*?<\\/a>/si");
-    // private static boolean isGithub(String github) {
-    //     return GITHUB_REGEX.matcher(github).matches();
-    // }
+        //Serialisation des contacts après l'ajout d'un nouveau contact
+       // ContactJsonSerializer.getText(contacts, "contacts.json");
+        
+    }
+
+    
+
+   
 
   
        
