@@ -4,22 +4,39 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-
+import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
-public class Contact {
+public class Contact implements Comparable<Contact>, Serializable {
 
-    private StringProperty name;
-    private StringProperty surname;
-    private StringProperty city;
-    private StringProperty gender;
-    private ObjectProperty<LocalDate> birthday;
-    private StringProperty phoneNumber;
-    private StringProperty phoneNumberProfessional;
-    private StringProperty nickname;
-    private StringProperty email;
-    private StringProperty postalCode;
-    private StringProperty github;
+    private transient StringProperty name;
+    private transient StringProperty surname;
+    private transient StringProperty city;
+    private transient StringProperty gender;
+    private transient ObjectProperty<LocalDate> birthday;
+    private transient StringProperty phoneNumber;
+    private transient StringProperty phoneNumberProfessional;
+    private transient StringProperty nickname;
+    private transient StringProperty email;
+    private transient StringProperty postalCode;
+    private transient StringProperty github;
+
+    /*  Fields for serialization */
+    private String nameSerialized;
+    private String surnameSerialized;
+    private String citySerialized;
+    private String genderSerialized;
+    private String birthdaySerialized;
+    private String phoneNumberSerialized;
+    private String phoneNumberProfessionalSerialized;
+    private String nicknameSerialized;
+    private String emailSerialized;
+    private String postalCodeSerialized;
+    private String githubSerialized;
 
     public Contact() {
         this.name = new SimpleStringProperty("");
@@ -35,7 +52,8 @@ public class Contact {
         this.github = new SimpleStringProperty("");
     }
 
-    public Contact(String name, String surname, String city, String gender, LocalDate birthday, String nickname, String phoneNumber, String phoneNumberProfessional, String email, String postalCode, String github) {
+    public Contact(String name, String surname, String city, String gender, LocalDate birthday, String nickname,
+                   String phoneNumber, String phoneNumberProfessional, String email, String postalCode, String github) {
         this.name = new SimpleStringProperty(name);
         this.surname = new SimpleStringProperty(surname);
         this.city = new SimpleStringProperty(city);
@@ -77,7 +95,7 @@ public class Contact {
         return this.city.get();
     }
 
-    public void setAddress(String city) {
+    public void setCity(String city) {
         this.city.set(city);
     }
 
@@ -179,5 +197,40 @@ public class Contact {
 
     public StringProperty githubProperty() {
         return github;
+    }
+
+    private void writeObject(ObjectOutputStream oos) throws IOException {
+        nameSerialized = name.get();
+        surnameSerialized = surname.get();
+        citySerialized = city.get();
+        genderSerialized = gender.get();
+        birthdaySerialized = birthday.get().format(DateTimeFormatter.ISO_LOCAL_DATE);
+        phoneNumberSerialized = phoneNumber.get();
+        phoneNumberProfessionalSerialized = phoneNumberProfessional.get();
+        nicknameSerialized = nickname.get();
+        emailSerialized = email.get();
+        postalCodeSerialized = postalCode.get();
+        githubSerialized = github.get();
+        oos.defaultWriteObject();
+    }
+
+    private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException {
+        ois.defaultReadObject();
+        this.name = new SimpleStringProperty(nameSerialized);
+        this.surname = new SimpleStringProperty(surnameSerialized);
+        this.city = new SimpleStringProperty(citySerialized);
+        this.gender = new SimpleStringProperty(genderSerialized);
+        this.birthday = new SimpleObjectProperty<>(LocalDate.parse(birthdaySerialized, DateTimeFormatter.ISO_LOCAL_DATE));
+        this.phoneNumber = new SimpleStringProperty(phoneNumberSerialized);
+        this.phoneNumberProfessional = new SimpleStringProperty(phoneNumberProfessionalSerialized);
+        this.nickname = new SimpleStringProperty(nicknameSerialized);
+        this.email = new SimpleStringProperty(emailSerialized);
+        this.postalCode = new SimpleStringProperty(postalCodeSerialized);
+        this.github = new SimpleStringProperty(githubSerialized);
+    }
+
+    @Override
+    public int compareTo(Contact o) {
+        return this.name.get().compareTo(o.getName());
     }
 }

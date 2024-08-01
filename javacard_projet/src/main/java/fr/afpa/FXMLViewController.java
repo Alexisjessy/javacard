@@ -2,20 +2,14 @@ package fr.afpa;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.ResourceBundle;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Side;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -41,7 +35,7 @@ public class FXMLViewController implements Initializable {
         return EMAIL_REGEX.matcher(email).matches();
     }
 
-    private ObservableList<Contact> ContactData = FXCollections.observableArrayList();
+    private ObservableList<Contact> contacts = FXCollections.observableArrayList();
 
     @FXML
     private TableView<Contact> TVContact;
@@ -110,10 +104,12 @@ public class FXMLViewController implements Initializable {
         String email = textFieldEmail.getText();
         String postalCode = textFieldPostalCode.getText();
         String github = textFieldGithub.getText();
-
+        /* 
+         Validation of data form
+         */
         errorText.setText("");
-
-        if (name.isEmpty() || surname.isEmpty() || city.isEmpty() || gender.equals( "Genre")  || postalCode.isEmpty()
+         
+        if (name.isEmpty() || surname.isEmpty() || city.isEmpty() || gender.equals("Genre") || postalCode.isEmpty()
                 || !isPhoneNumberValid(phoneNumber) || !isEmailValid(email)) {
             if (name.isEmpty()) {
                 errorText.setText("Le champ nom est obligatoire.\n");
@@ -125,7 +121,7 @@ public class FXMLViewController implements Initializable {
                 errorText.setText(errorText.getText() + "Le champ ville est obligatoire.\n");
             }
             if (gender.equals("Genre")) {
-                errorText.setText(errorText.getText() + "Le champ genre  est obligatoire.\n");
+                errorText.setText(errorText.getText() + "Le champ genre est obligatoire.\n");
             }
             if (postalCode.isEmpty()) {
                 errorText.setText("Le code postal est obligatoire.\n");
@@ -136,13 +132,16 @@ public class FXMLViewController implements Initializable {
             if (!isEmailValid(email)) {
                 errorText.setText(errorText.getText() + "L'email n'est pas valide.\n");
             }
-           
+
             return;
         }
 
         Contact newContact = new Contact(name, surname, city, gender, birthday, nickname, phoneNumber,
                 phoneNumberProfessional, email, postalCode, github);
-        ContactData.add(newContact);
+        contacts.add(newContact);
+
+        /*  Serialize contacts after adding a new one */
+        ContactSerialization.serializeContacts(contacts, "contacts.ser");
 
         textFieldNom.clear();
         textFieldPrenom.clear();
@@ -192,12 +191,12 @@ public class FXMLViewController implements Initializable {
         columnPostalCode.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
         columnGithub.setCellValueFactory(new PropertyValueFactory<>("github"));
 
-        ContactData.add(new Contact("Reese", "Kyle", "Bordeaux", "Men", LocalDate.of(1990, 1, 1), "Reezy", "123456789",
-                "987654321", "reese@example.com", "33000", "reeseGithub"));
-        ContactData.add(new Contact("Smith", "John", "Berlin", "Men", LocalDate.of(1985, 5, 15), "Johnny", "123123123",
-                "321321321", "john@example.com", "10115", "johnGithub"));
+        /*  Deserialize contacts during initialization */
+        String filename = "contacts.ser";
+        List<Contact> deserializedContacts = ContactSerialization.deserializeContacts(filename);
+        contacts.addAll(deserializedContacts);
 
-        TVContact.setItems(ContactData);
+        TVContact.setItems(contacts);
     }
 
     private Stage stage;
