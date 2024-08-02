@@ -16,6 +16,7 @@ public class Contact implements Comparable<Contact>, Serializable {
     private transient StringProperty name;
     private transient StringProperty surname;
     private transient StringProperty city;
+    private transient StringProperty adress;
     private transient StringProperty gender;
     private transient ObjectProperty<LocalDate> birthday;
     private transient StringProperty phoneNumber;
@@ -29,6 +30,7 @@ public class Contact implements Comparable<Contact>, Serializable {
     private String nameSerialized;
     private String surnameSerialized;
     private String citySerialized;
+    private String adressSerialized;
     private String genderSerialized;
     private String birthdaySerialized;
     private String phoneNumberSerialized;
@@ -42,6 +44,7 @@ public class Contact implements Comparable<Contact>, Serializable {
         this.name = new SimpleStringProperty("");
         this.surname = new SimpleStringProperty("");
         this.city = new SimpleStringProperty("");
+        this.adress = new SimpleStringProperty("");
         this.gender = new SimpleStringProperty("");
         this.birthday = new SimpleObjectProperty<>(LocalDate.now());
         this.nickname = new SimpleStringProperty("");
@@ -52,11 +55,12 @@ public class Contact implements Comparable<Contact>, Serializable {
         this.github = new SimpleStringProperty("");
     }
 
-    public Contact(String name, String surname, String city, String gender, LocalDate birthday, String nickname,
+    public Contact(String name, String surname, String city, String adress, String gender, LocalDate birthday, String nickname,
             String phoneNumber, String phoneNumberProfessional, String email, String postalCode, String github) {
         this.name = new SimpleStringProperty(name);
         this.surname = new SimpleStringProperty(surname);
         this.city = new SimpleStringProperty(city);
+        this.adress = new SimpleStringProperty(adress);
         this.gender = new SimpleStringProperty(gender);
         this.birthday = new SimpleObjectProperty<>(birthday);
         this.nickname = new SimpleStringProperty(nickname);
@@ -103,6 +107,18 @@ public class Contact implements Comparable<Contact>, Serializable {
         return city;
     }
 
+    public String getAdress() {
+        return this.adress.get();
+    }
+
+    public void setAdress(String adress) {
+        this.adress.set(adress);
+    }
+
+    public StringProperty adressProperty() {
+        return adress;
+    }
+     
     public String getGender() {
         return this.gender.get();
     }
@@ -203,6 +219,7 @@ public class Contact implements Comparable<Contact>, Serializable {
         nameSerialized = name.get();
         surnameSerialized = surname.get();
         citySerialized = city.get();
+        adressSerialized = adress.get();
         genderSerialized = gender.get();
         if (birthday.get() != null) {
 
@@ -216,26 +233,23 @@ public class Contact implements Comparable<Contact>, Serializable {
         githubSerialized = github.get();
         oos.defaultWriteObject();
     }
-
     private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException {
         ois.defaultReadObject();
-        this.name = new SimpleStringProperty(nameSerialized);
-        this.surname = new SimpleStringProperty(surnameSerialized);
-        this.city = new SimpleStringProperty(citySerialized);
-        this.gender = new SimpleStringProperty(genderSerialized);
-        if (birthdaySerialized != null) {
-            this.birthday = new SimpleObjectProperty<>(
-                    LocalDate.parse(birthdaySerialized, DateTimeFormatter.ISO_LOCAL_DATE));
-        }
-
-        this.phoneNumber = new SimpleStringProperty(phoneNumberSerialized);
-        this.phoneNumberProfessional = new SimpleStringProperty(phoneNumberProfessionalSerialized);
-        this.nickname = new SimpleStringProperty(nicknameSerialized);
-        this.email = new SimpleStringProperty(emailSerialized);
-        this.postalCode = new SimpleStringProperty(postalCodeSerialized);
-        this.github = new SimpleStringProperty(githubSerialized);
+        this.name = new SimpleStringProperty(nameSerialized != null ? nameSerialized : "");
+        this.surname = new SimpleStringProperty(surnameSerialized != null ? surnameSerialized : "");
+        this.city = new SimpleStringProperty(citySerialized != null ? citySerialized : "");
+        this.adress = new SimpleStringProperty(adressSerialized != null ? adressSerialized : "");
+        this.gender = new SimpleStringProperty(genderSerialized != null ? genderSerialized : "");
+        this.birthday = birthdaySerialized != null ? new SimpleObjectProperty<>(LocalDate.parse(birthdaySerialized, DateTimeFormatter.ISO_LOCAL_DATE)) : new SimpleObjectProperty<>(null);
+        this.phoneNumber = new SimpleStringProperty(phoneNumberSerialized != null ? phoneNumberSerialized : "");
+        this.phoneNumberProfessional = new SimpleStringProperty(phoneNumberProfessionalSerialized != null ? phoneNumberProfessionalSerialized : "");
+        this.nickname = new SimpleStringProperty(nicknameSerialized != null ? nicknameSerialized : "");
+        this.email = new SimpleStringProperty(emailSerialized != null ? emailSerialized : "");
+        this.postalCode = new SimpleStringProperty(postalCodeSerialized != null ? postalCodeSerialized : "");
+        this.github = new SimpleStringProperty(githubSerialized != null ? githubSerialized : "");
     }
-
+    
+ 
     @Override
     public int compareTo(Contact o) {
         return this.name.get().compareTo(o.getName());

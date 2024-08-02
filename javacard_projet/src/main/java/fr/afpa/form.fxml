@@ -50,7 +50,8 @@
               <Label layoutX="195.0" layoutY="274.0" prefHeight="17.0" prefWidth="136.0" text="Lien page Github" />
               <TextField fx:id="textFieldPostalCode" layoutX="370.0" layoutY="298.0" prefHeight="25.0" prefWidth="145.0" promptText="code postal" />
               <Label layoutX="375.0" layoutY="274.0" prefHeight="17.0" prefWidth="136.0" text="Code postal*" />
-             
+              <TextField fx:id="textFieldAdress" layoutX="370.0" layoutY="229.0" prefHeight="25.0" prefWidth="145.0" promptText="rue des lilas" />
+              <Label layoutX="379.0" layoutY="206.0" prefHeight="17.0" prefWidth="60.0" text="Adresse*" />
               <Label fx:id="errorText" layoutX="20.0" layoutY="350.0" textFill="red" />
           </children>
       </AnchorPane>
@@ -59,6 +60,7 @@
             <TableColumn fx:id="columnName" prefWidth="75.0" text="Nom" />
             <TableColumn fx:id="columnSurname" prefWidth="75.0" text="Prenom" />
             <TableColumn fx:id="columnCity" prefWidth="75.0" text="Ville" />
+            <TableColumn fx:id="columnAdress" prefWidth="75.0" text="Adresse" />
             <TableColumn fx:id="columnGender" prefWidth="75.0" text="Genre" />
             <TableColumn fx:id="columnBirthday" prefWidth="75.0" text="Date de Naissance" />
             <TableColumn fx:id="columnPhoneNumber" prefWidth="100.0" text="Tel" />

@@ -27,11 +27,16 @@ public class FXMLViewController implements Initializable {
             "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?",
             Pattern.CASE_INSENSITIVE);
 
-    private static final Pattern GITHUB_REGEX = Pattern
-            .compile("/<a.*?href\\s*=\\s*[\"\\']([^\"\\'>]+)[\"\\'][^>]*>.*?word.*?<\\/a>/si");
+     private static final Pattern POST_CODE_REGEX = Pattern.compile("^(?:0[1-9]|[1-8]\\d|9[0-8])\\d{3}$");
+                
+            
+    private static final Pattern GITHUB_REGEX = Pattern.compile("^https?://github.com/([a-zA-Z0-9._-]+)$");
 
     private static boolean isPhoneNumberValid(String phoneNumber) {
         return PHONE_NUMBER_REGEX.matcher(phoneNumber).matches();
+    }
+    private static boolean isCodePostValid(String postalCode){
+        return POST_CODE_REGEX.matcher(postalCode).matches();
     }
 
     private static boolean isEmailValid(String email) {
@@ -52,6 +57,8 @@ public class FXMLViewController implements Initializable {
     private TableColumn<Contact, String> columnSurname;
     @FXML
     private TableColumn<Contact, String> columnCity;
+    @FXML
+    private TableColumn<Contact, String> columnAdress;
     @FXML
     private TableColumn<Contact, String> columnGender;
     @FXML
@@ -75,6 +82,8 @@ public class FXMLViewController implements Initializable {
     private TextField textFieldPrenom;
     @FXML
     private TextField textFieldVille;
+    @FXML
+    private TextField textFieldAdress;
     @FXML
     private SplitMenuButton splitMenuButtonGender;
     @FXML
@@ -103,6 +112,7 @@ public class FXMLViewController implements Initializable {
         String name = textFieldNom.getText();
         String surname = textFieldPrenom.getText();
         String city = textFieldVille.getText();
+        String adress = textFieldAdress.getText();
         String gender = splitMenuButtonGender.getText();
         LocalDate birthday = datePickerBirthday.getValue();
         String nickname = textFieldNickname.getText();
@@ -111,18 +121,27 @@ public class FXMLViewController implements Initializable {
         String email = textFieldEmail.getText();
         String postalCode = textFieldPostalCode.getText();
         String github = textFieldGithub.getText();
+        errorText.setText("");
+
+        if (birthday != null && birthday.isAfter(LocalDate.now())) {
+            errorText.setText(errorText.getText() + "La date de naissance ne peut pas être supérieure à la date actuelle.\n");
+        }
+
 
         if (!github.isEmpty() && !isGithub(github)) {
             errorText.setText(errorText.getText() + "L'adresse Github n'est pas valide.\n");
 
         }
-
+        if (!phoneNumberProfessional.isEmpty() && !isPhoneNumberValid(phoneNumberProfessional)) {
+            errorText.setText(errorText.getText() + "Le numero de telephone professionnel n'est pas valide.\n");
+        }
+        
         /*
          * Validation of data form
          */
-        errorText.setText("");
+      
 
-        if (name.isEmpty() || surname.isEmpty() || city.isEmpty() || gender.equals("Genre") || postalCode.isEmpty()
+        if (name.isEmpty() || surname.isEmpty() || city.isEmpty() || adress.isEmpty() || gender.equals("Genre") ||postalCode.isEmpty() || !isCodePostValid(postalCode)
                 || !isPhoneNumberValid(phoneNumber) || !isEmailValid(email)) {
             if (name.isEmpty()) {
                 errorText.setText("Le champ nom est obligatoire.\n");
@@ -133,11 +152,17 @@ public class FXMLViewController implements Initializable {
             if (city.isEmpty()) {
                 errorText.setText(errorText.getText() + "Le champ ville est obligatoire.\n");
             }
+            if (adress.isEmpty()) {
+                errorText.setText(errorText.getText() + "Le champ adresse est obligatoire.\n");
+            }
             if (gender.equals("Genre")) {
                 errorText.setText(errorText.getText() + "Le champ genre est obligatoire.\n");
             }
             if (postalCode.isEmpty()) {
-                errorText.setText("Le code postal est obligatoire.\n");
+                errorText.setText(errorText.getText() + "Le champ code postal est obligatoire.\n");
+            }
+            if (!isCodePostValid(postalCode)) {
+                errorText.setText(errorText.getText() + "Le code postal n'est pas valide !\n");
             }
             if (!isPhoneNumberValid(phoneNumber)) {
                 errorText.setText(errorText.getText() + "Le numéro de téléphone n'est pas valide.\n");
@@ -145,11 +170,15 @@ public class FXMLViewController implements Initializable {
             if (!isEmailValid(email)) {
                 errorText.setText(errorText.getText() + "L'email n'est pas valide.\n");
             }
-
+          
+            return;
+        }
+        if (!errorText.getText().isEmpty()) {
+            
             return;
         }
 
-        Contact newContact = new Contact(name, surname, city, gender, birthday, nickname, phoneNumber,
+        Contact newContact = new Contact(name, surname, city, adress, gender, birthday, nickname, phoneNumber,
                 phoneNumberProfessional, email, postalCode, github);
         contacts.add(newContact);
 
@@ -159,6 +188,7 @@ public class FXMLViewController implements Initializable {
         textFieldNom.clear();
         textFieldPrenom.clear();
         textFieldVille.clear();
+        textFieldAdress.clear();
         splitMenuButtonGender.setText("Genre");
         datePickerBirthday.setValue(null);
         textFieldNickname.clear();
@@ -174,6 +204,7 @@ public class FXMLViewController implements Initializable {
         textFieldNom.clear();
         textFieldPrenom.clear();
         textFieldVille.clear();
+        textFieldAdress.clear();
         splitMenuButtonGender.setText("Genre");
         datePickerBirthday.setValue(null);
         textFieldNickname.clear();
@@ -192,17 +223,19 @@ public class FXMLViewController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // textFieldNom.setText("EJ");
-        // textFieldPrenom.setText("EJ");
-        // textFieldEmail.setText("al@gmail.com");
-        // textFieldNickname.setText("EJ");
-        // textFieldPhoneNumber.setText("0554525251");
+        textFieldNom.setText("EJ");
+        textFieldPrenom.setText("EJ");
+        textFieldEmail.setText("al@gmail.com");
+        textFieldNickname.setText("EJ");
+        textFieldPhoneNumber.setText("0554525251");
         // textFieldPostalCode.setText("EJ");
-        // textFieldVille.setText("EJ");
-        // textFieldNickname.setText("EJ");
+        textFieldVille.setText("EJ");
+        textFieldNickname.setText("EJ");
+        textFieldAdress.setText("EJ");
         columnName.setCellValueFactory(new PropertyValueFactory<>("name"));
         columnSurname.setCellValueFactory(new PropertyValueFactory<>("surname"));
         columnCity.setCellValueFactory(new PropertyValueFactory<>("city"));
+        columnAdress.setCellValueFactory(new PropertyValueFactory<>("adress"));
         columnGender.setCellValueFactory(new PropertyValueFactory<>("gender"));
         columnBirthday.setCellValueFactory(new PropertyValueFactory<>("birthday"));
         columnNickname.setCellValueFactory(new PropertyValueFactory<>("nickname"));

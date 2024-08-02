@@ -14,13 +14,9 @@
 <VBox xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.afpa.FXMLViewController">
    <children>
       <AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="458.0" prefWidth="683.0">
-       
           <children>
-            <Label fx:id="errorText" layoutX="20.0" layoutY="350.0" prefHeight="25.0" prefWidth="600.0" textFill="red" />
-            <Label layoutX="410.0" layoutY="340.0" prefHeight="30.0" prefWidth="700" text="Les champs avec *  sont obligatoires" />
               <Button fx:id="button_save" layoutX="545.0" layoutY="381.0" mnemonicParsing="false" onAction="#handleButtonActionSave" prefHeight="25.0" prefWidth="79.0" text="Valider" />
-              <Button fx:id="button_delete" layoutX="430.0" layoutY="381.0" mnemonicParsing="false" onAction="#handleButtonActionCancel" prefHeight="25.0" prefWidth="69.0" text="Effacer" />
-               
+              <Button fx:id="button_cancel" layoutX="430.0" layoutY="381.0" mnemonicParsing="false" onAction="#handleButtonActionDelete" prefHeight="25.0" prefWidth="69.0" text="Effacer" />
               <Label layoutX="20.0" layoutY="45.0" prefHeight="17.0" prefWidth="69.0" text="Nom*" />
               <TextField fx:id="textFieldNom" layoutX="20.0" layoutY="75.0" prefHeight="25.0" prefWidth="145.0" promptText="Nom" />
               <Label layoutX="202.0" layoutY="54.0" prefHeight="17.0" prefWidth="120.0" text="Prenom*" />
@@ -50,9 +46,8 @@
               <Label layoutX="195.0" layoutY="274.0" prefHeight="17.0" prefWidth="136.0" text="Lien page Github" />
               <TextField fx:id="textFieldPostalCode" layoutX="370.0" layoutY="298.0" prefHeight="25.0" prefWidth="145.0" promptText="code postal" />
               <Label layoutX="375.0" layoutY="274.0" prefHeight="17.0" prefWidth="136.0" text="Code postal*" />
-              <TextField fx:id="textFieldAdress" layoutX="370.0" layoutY="229.0" prefHeight="25.0" prefWidth="145.0" promptText="rue des lilas" />
-              <Label layoutX="379.0" layoutY="206.0" prefHeight="17.0" prefWidth="60.0" text="Adresse*" />
-              <Label fx:id="errorText" layoutX="20.0" layoutY="350.0" textFill="red" />
+            <TextField fx:id="textFieldPostalCode1" layoutX="370.0" layoutY="229.0" prefHeight="25.0" prefWidth="145.0" promptText="rue des lilas" />
+            <Label layoutX="379.0" layoutY="206.0" prefHeight="17.0" prefWidth="60.0" text="Adresse*" />
           </children>
       </AnchorPane>
         <TableView fx:id="TVContact" prefHeight="200.0" prefWidth="640.0">
@@ -60,7 +55,6 @@
             <TableColumn fx:id="columnName" prefWidth="75.0" text="Nom" />
             <TableColumn fx:id="columnSurname" prefWidth="75.0" text="Prenom" />
             <TableColumn fx:id="columnCity" prefWidth="75.0" text="Ville" />
-            <TableColumn fx:id="columnAdress" prefWidth="75.0" text="Adresse" />
             <TableColumn fx:id="columnGender" prefWidth="75.0" text="Genre" />
             <TableColumn fx:id="columnBirthday" prefWidth="75.0" text="Date de Naissance" />
             <TableColumn fx:id="columnPhoneNumber" prefWidth="100.0" text="Tel" />
