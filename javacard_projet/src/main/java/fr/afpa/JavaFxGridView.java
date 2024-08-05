@@ -12,7 +12,7 @@ public class JavaFxGridView extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-        FXMLLoader loader = new FXMLLoader(JavaFxGridView.class.getResource("form.fxml"));
+        FXMLLoader loader = new FXMLLoader(JavaFxGridView.class.getResource("contact.fxml"));
         Parent root = (Parent) loader.load();
         final FXMLViewController controller = loader.getController();
         controller.setStage(stage);

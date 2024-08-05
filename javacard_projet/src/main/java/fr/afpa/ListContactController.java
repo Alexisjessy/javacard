@@ -97,6 +97,8 @@ public class ListContactController {
         tableView.setItems(contacts);
     }
 
+
+    
     // Gestionnaire d'événement
 
     // Methode pour rechercher dans la liste
