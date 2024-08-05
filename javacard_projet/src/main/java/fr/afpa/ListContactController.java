@@ -88,11 +88,11 @@ public class ListContactController {
         postalCodeColumn.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
         githubColumn.setCellValueFactory(new PropertyValueFactory<>("github"));
 
-        // Implementation
-        contacts.add(new Contact("Toto", "Tata", "69 rue toto", "Male", LocalDate.of(2000, 2, 4), "Tota", "123456789",
-                "987654321", "john.doe@example.com", "Bordeaux", "12345", "johnDoeGitHub"));
-        contacts.add(new Contact("Titi", "Tutu", "56 rue titi", "Female", LocalDate.of(2002, 9, 24), "Titu",
-                "123456789", "987654321", "jane.doe@example.com", "Begles", "12345", "janeDoeGitHub"));
+        // // Implementation
+        // contacts.add(new Contact("Toto", "Tata", "69 rue toto", "Male", LocalDate.of(2000, 2, 4), "Tota", "123456789",
+        //         "987654321", "john.doe@example.com", "Bordeaux", "12345", "johnDoeGitHub"));
+        // contacts.add(new Contact("Titi", "Tutu", "56 rue titi", "Female", LocalDate.of(2002, 9, 24), "Titu",
+        //         "123456789", "987654321", "jane.doe@example.com", "Begles", "12345", "janeDoeGitHub"));
 
         tableView.setItems(contacts);
     }
@@ -120,7 +120,7 @@ public class ListContactController {
         List<Contact> filteredContacts = contacts.stream()
                 .filter(contact -> contact.getName().toLowerCase().contains(searchText) ||
                         contact.getSurname().toLowerCase().contains(searchText) ||
-                        contact.getAddress().toLowerCase().contains(searchText) ||
+                        contact.getAdress().toLowerCase().contains(searchText) ||
                         // contact.getBirthday().toLowerCase().contains(searchText) ||
                         contact.getEmail().toLowerCase().contains(searchText) ||
                         contact.getNickname().toLowerCase().contains(searchText) ||
