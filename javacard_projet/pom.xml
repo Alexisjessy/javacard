@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>fr.afpa</groupId>
     <artifactId>javacard_projet</artifactId>
@@ -20,6 +20,8 @@
             <artifactId>javafx-fxml</artifactId>
             <version>22.0.2</version>
         </dependency>
+      
+        
     </dependencies>
     <build>
         <plugins>
@@ -37,11 +39,12 @@
                 <version>0.0.8</version>
                 <executions>
                     <execution>
-                        <!-- Default configuration for running -->
-                        <!-- Usage: mvn clean javafx:run -->
                         <id>default-cli</id>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
                         <configuration>
-                            <mainClass>fr.afpa.App</mainClass>
+                            <mainClass>fr.afpa.MainApp</mainClass>
                         </configuration>
                     </execution>
                 </executions>

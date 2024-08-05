@@ -68,7 +68,7 @@ public class FXMLViewController implements Initializable {
     private TableColumn<Contact, String> surnameColumn;
 
     @FXML
-    private TableColumn<Contact, String> address;
+    private TableColumn<Contact, String> adressColumn;
 
     @FXML
     private TableColumn<Contact, String> genderColumn;
@@ -132,6 +132,8 @@ public class FXMLViewController implements Initializable {
 
     @FXML
     private Button exportButton;
+    @FXML
+    private Label labelResultat;
 
     @FXML
     private void handleButtonActionSave(ActionEvent event) {
@@ -262,7 +264,7 @@ public class FXMLViewController implements Initializable {
         // searchTextField.setText("toti");
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         surnameColumn.setCellValueFactory(new PropertyValueFactory<>("surname"));
-        address.setCellValueFactory(new PropertyValueFactory<>("address"));
+        adressColumn.setCellValueFactory(new PropertyValueFactory<>("adress"));
         genderColumn.setCellValueFactory(new PropertyValueFactory<>("gender"));
         birthdayColumn.setCellValueFactory(new PropertyValueFactory<>("birthday"));
         phoneNumberColumn.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
@@ -307,7 +309,17 @@ public class FXMLViewController implements Initializable {
         searchTextField.clear();
         tableView.setItems(contacts);
     }
-
+    @FXML
+    void handleButtonActionExport(ActionEvent event) {
+        Contact selectedContact = tableView.getSelectionModel().getSelectedItem();
+        if (selectedContact != null) {
+            String filePath = selectedContact.getName() + "_" + selectedContact.getSurname() + ".vcf";
+            selectedContact.exportToVCard(filePath);
+            labelResultat.setText("Contact exporté en tant que VCard !");
+        } else {
+            labelResultat.setText("Aucun contact sélectionné.");
+        }
+    }
     // Méthode pour supprimer
     @FXML
     private void delete(ActionEvent event) {

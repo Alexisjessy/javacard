@@ -36,7 +36,7 @@
         <columns>
             <TableColumn fx:id="nameColumn" prefWidth="75.0" text="Name" />
           <TableColumn fx:id="surnameColumn" prefWidth="75.0" text="Surname" />
-          <TableColumn fx:id="address" prefWidth="75.0" text="Address" />
+          <TableColumn fx:id="adressColumn" prefWidth="75.0" text="Adress" />
             <TableColumn fx:id="genderColumn" prefWidth="75.0" text="Gender" />
             <TableColumn fx:id="birthdayColumn" prefWidth="75.0" text="Birthday" />
             <TableColumn fx:id="phoneNumberColumn" prefWidth="75.0" text="Phone Number" />
@@ -58,8 +58,11 @@
         </rowConstraints>
          <children>
             <Button mnemonicParsing="false" onAction="#delete" text="Delete" />
-            <Button alignment="CENTER_RIGHT" mnemonicParsing="false" text="Export" textAlignment="CENTER" GridPane.columnIndex="1" />
-         </children>
+            
+          
+            <Button alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#handleButtonActionExport" text="Export" textAlignment="CENTER" GridPane.columnIndex="1" />
+        
+            <Label fx:id="labelResultat" text="" /> </children>
       </GridPane>
       <GridPane hgap="10.0" vgap="10.0">
         <columnConstraints>

@@ -7,11 +7,15 @@ import javafx.beans.property.SimpleObjectProperty;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 public class Contact implements Comparable<Contact>, Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private transient StringProperty name;
     private transient StringProperty surname;
@@ -56,7 +60,7 @@ public class Contact implements Comparable<Contact>, Serializable {
     }
 
     public Contact(String name, String surname, String city, String adress, String gender, LocalDate birthday, String nickname,
-            String phoneNumber, String phoneNumberProfessional, String email, String postalCode, String github) {
+                   String phoneNumber, String phoneNumberProfessional, String email, String postalCode, String github) {
         this.name = new SimpleStringProperty(name);
         this.surname = new SimpleStringProperty(surname);
         this.city = new SimpleStringProperty(city);
@@ -71,150 +75,104 @@ public class Contact implements Comparable<Contact>, Serializable {
         this.github = new SimpleStringProperty(github);
     }
 
+    // Getters and Setters
     public String getName() {
-        return this.name.get();
+        return name.get();
     }
 
     public void setName(String name) {
         this.name.set(name);
     }
 
-    public StringProperty nameProperty() {
-        return name;
-    }
-
     public String getSurname() {
-        return this.surname.get();
+        return surname.get();
     }
 
     public void setSurname(String surname) {
         this.surname.set(surname);
     }
 
-    public StringProperty surnameProperty() {
-        return surname;
-    }
-
     public String getCity() {
-        return this.city.get();
+        return city.get();
     }
 
     public void setCity(String city) {
         this.city.set(city);
     }
 
-    public StringProperty cityProperty() {
-        return city;
-    }
-
     public String getAdress() {
-        return this.adress.get();
+        return adress.get();
     }
 
     public void setAdress(String adress) {
         this.adress.set(adress);
     }
 
-    public StringProperty adressProperty() {
-        return adress;
-    }
-     
     public String getGender() {
-        return this.gender.get();
+        return gender.get();
     }
 
     public void setGender(String gender) {
         this.gender.set(gender);
     }
 
-    public StringProperty genderProperty() {
-        return gender;
-    }
-
     public LocalDate getBirthday() {
-        return this.birthday.get();
+        return birthday.get();
     }
 
     public void setBirthday(LocalDate birthday) {
         this.birthday.set(birthday);
     }
 
-    public ObjectProperty<LocalDate> birthdayProperty() {
-        return birthday;
-    }
-
     public String getPhoneNumber() {
-        return this.phoneNumber.get();
+        return phoneNumber.get();
     }
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber.set(phoneNumber);
     }
 
-    public StringProperty phoneNumberProperty() {
-        return phoneNumber;
-    }
-
     public String getPhoneNumberProfessional() {
-        return this.phoneNumberProfessional.get();
+        return phoneNumberProfessional.get();
     }
 
     public void setPhoneNumberProfessional(String phoneNumberProfessional) {
         this.phoneNumberProfessional.set(phoneNumberProfessional);
     }
 
-    public StringProperty phoneNumberProfessionalProperty() {
-        return phoneNumberProfessional;
-    }
-
     public String getNickname() {
-        return this.nickname.get();
+        return nickname.get();
     }
 
     public void setNickname(String nickname) {
         this.nickname.set(nickname);
     }
 
-    public StringProperty nicknameProperty() {
-        return nickname;
-    }
-
     public String getEmail() {
-        return this.email.get();
+        return email.get();
     }
 
     public void setEmail(String email) {
         this.email.set(email);
     }
 
-    public StringProperty emailProperty() {
-        return email;
-    }
-
     public String getPostalCode() {
-        return this.postalCode.get();
+        return postalCode.get();
     }
 
     public void setPostalCode(String postalCode) {
         this.postalCode.set(postalCode);
     }
 
-    public StringProperty postalCodeProperty() {
-        return postalCode;
-    }
-
     public String getGithub() {
-        return this.github.get();
+        return github.get();
     }
 
     public void setGithub(String github) {
         this.github.set(github);
     }
 
-    public StringProperty githubProperty() {
-        return github;
-    }
-
+    // Serialization methods
     private void writeObject(ObjectOutputStream oos) throws IOException {
         nameSerialized = name.get();
         surnameSerialized = surname.get();
@@ -222,7 +180,6 @@ public class Contact implements Comparable<Contact>, Serializable {
         adressSerialized = adress.get();
         genderSerialized = gender.get();
         if (birthday.get() != null) {
-
             birthdaySerialized = birthday.get().format(DateTimeFormatter.ISO_LOCAL_DATE);
         }
         phoneNumberSerialized = phoneNumber.get();
@@ -233,6 +190,7 @@ public class Contact implements Comparable<Contact>, Serializable {
         githubSerialized = github.get();
         oos.defaultWriteObject();
     }
+
     private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException {
         ois.defaultReadObject();
         this.name = new SimpleStringProperty(nameSerialized != null ? nameSerialized : "");
@@ -248,8 +206,29 @@ public class Contact implements Comparable<Contact>, Serializable {
         this.postalCode = new SimpleStringProperty(postalCodeSerialized != null ? postalCodeSerialized : "");
         this.github = new SimpleStringProperty(githubSerialized != null ? githubSerialized : "");
     }
-    
- 
+
+    public void exportToVCard(String filePath) {
+        StringBuilder vCardBuilder = new StringBuilder();
+        vCardBuilder.append("BEGIN:VCARD\n");
+        vCardBuilder.append("VERSION:3.0\n");
+        vCardBuilder.append("FN:").append(getName()).append(" ").append(getSurname()).append("\n");
+        vCardBuilder.append("N:").append(getSurname()).append(";").append(getName()).append(";;;\n");
+        vCardBuilder.append("ADR:;;").append(getAdress()).append(";").append(getCity()).append(";").append(getPostalCode()).append(";;\n");
+        vCardBuilder.append("TEL:").append(getPhoneNumber()).append("\n");
+        vCardBuilder.append("TEL;TYPE=WORK:").append(getPhoneNumberProfessional()).append("\n");
+        vCardBuilder.append("EMAIL:").append(getEmail()).append("\n");
+        if (getGithub() != null && !getGithub().isEmpty()) {
+            vCardBuilder.append("URL:").append(getGithub()).append("\n");
+        }
+        vCardBuilder.append("END:VCARD\n");
+
+        try (FileOutputStream fos = new FileOutputStream(new File(filePath))) {
+            fos.write(vCardBuilder.toString().getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public int compareTo(Contact o) {
         return this.name.get().compareTo(o.getName());
