@@ -13,6 +13,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
+import fr.afpa.FXMLViewController.ContactJsonSerializer;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -130,7 +132,7 @@ public class FXMLViewController implements Initializable {
 
     @FXML
     private TextField textFieldNickname;
-    
+
     @FXML
     private TextField textFieldPhoneNumber;
 
@@ -167,11 +169,11 @@ public class FXMLViewController implements Initializable {
     @FXML
     private Label labelResultatJson;
 
-    
-/**
- * Method to register a contact in the tableview
- * @param event
- */
+    /**
+     * Method to register a contact in the tableview
+     * 
+     * @param event
+     */
     @FXML
     private void handleButtonActionSave(ActionEvent event) {
         String name = textFieldNom.getText();
@@ -242,13 +244,30 @@ public class FXMLViewController implements Initializable {
 
             return;
         }
-
-        /**
-         * Implementation
-         */
-        Contact newContact = new Contact(name, surname, city, adress, gender, birthday, nickname, phoneNumber,
-                phoneNumberProfessional, email, postalCode, github);
-        contacts.add(newContact);
+         
+        Contact selectedContact = tableView.getSelectionModel().getSelectedItem();
+        if (selectedContact != null) {
+            // Mise à jour du contact existant
+            selectedContact.setName(name);
+            selectedContact.setSurname(surname);
+            selectedContact.setCity(city);
+            selectedContact.setAdress(adress);
+            selectedContact.setGender(gender);
+            selectedContact.setBirthday(birthday);
+            selectedContact.setNickname(nickname);
+            selectedContact.setPhoneNumber(phoneNumber);
+            selectedContact.setPhoneNumberProfessional(phoneNumberProfessional);
+            selectedContact.setEmail(email);
+            selectedContact.setPostalCode(postalCode);
+            selectedContact.setGithub(github);
+    
+            tableView.refresh();
+        } else {
+            // Ajout d'un nouveau contact
+            Contact newContact = new Contact(name, surname, city, adress, gender, birthday, nickname, phoneNumber,
+                    phoneNumberProfessional, email, postalCode, github);
+            contacts.add(newContact);
+        }
 
         /* Serialize contacts after adding a new one */
         ContactSerialization.serializeContacts(contacts, "contacts.ser");
@@ -268,7 +287,8 @@ public class FXMLViewController implements Initializable {
     }
 
     /**
-     * Method for Delete A Contact 
+     * Method for Delete A Contact
+     * 
      * @param event
      */
     @FXML
@@ -295,7 +315,7 @@ public class FXMLViewController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-       
+
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         surnameColumn.setCellValueFactory(new PropertyValueFactory<>("surname"));
         adressColumn.setCellValueFactory(new PropertyValueFactory<>("adress"));
@@ -315,10 +335,32 @@ public class FXMLViewController implements Initializable {
         contacts.addAll(deserializedContacts);
 
         tableView.setItems(contacts);
+        tableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                fillForm(newValue);
+            }
+        });
 
     }
+
+    private void fillForm(Contact contact) {
+        textFieldNom.setText(contact.getName());
+        textFieldPrenom.setText(contact.getSurname());
+        textFieldVille.setText(contact.getCity());
+        textFieldAdress.setText(contact.getAdress());
+        splitMenuButtonGender.setText(contact.getGender());
+        datePickerBirthday.setValue(contact.getBirthday());
+        textFieldNickname.setText(contact.getNickname());
+        textFieldPhoneNumber.setText(contact.getPhoneNumber());
+        textFieldPhoneNumberProfessional.setText(contact.getPhoneNumberProfessional());
+        textFieldEmail.setText(contact.getEmail());
+        textFieldPostalCode.setText(contact.getPostalCode());
+        textFieldGithub.setText(contact.getGithub());
+    }
+
     /**
      * Metho se
+     * 
      * @param event
      */
     @FXML

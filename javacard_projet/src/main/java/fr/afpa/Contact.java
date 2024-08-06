@@ -211,7 +211,7 @@ public class Contact implements Comparable<Contact>, Serializable {
     public void exportToVCard(String filePath) {
         StringBuilder vCardBuilder = new StringBuilder();
         vCardBuilder.append("BEGIN:VCARD\n");
-        vCardBuilder.append("VERSION:3.0\n");
+        vCardBuilder.append("VERSION:4.0\n");
         vCardBuilder.append("FN:").append(getName()).append(" ").append(getSurname()).append("\n");
         vCardBuilder.append("N:").append(getSurname()).append(";").append(getName()).append(";;;\n");
         vCardBuilder.append("ADR:;;").append(getAdress()).append(";").append(getCity()).append(";").append(getPostalCode()).append(";;\n");
