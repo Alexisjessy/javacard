@@ -221,15 +221,21 @@ public class Contact implements Comparable<Contact>, Serializable {
         if (getGithub() != null && !getGithub().isEmpty()) {
             vCardBuilder.append("URL:").append(getGithub()).append("\n");
         }
+        if (getBirthday() != null) {
+            vCardBuilder.append("BDAY:").append(getBirthday().format(DateTimeFormatter.ISO_LOCAL_DATE)).append("\n");
+        }
+        if (getGender() != null && !getGender().isEmpty()) {
+            vCardBuilder.append("GENDER:").append(getGender()).append("\n");
+        }
         vCardBuilder.append("END:VCARD\n");
-
+    
         try (FileOutputStream fos = new FileOutputStream(new File(filePath))) {
             fos.write(vCardBuilder.toString().getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
+    
     @Override
     public int compareTo(Contact o) {
         return this.name.get().compareTo(o.getName());
