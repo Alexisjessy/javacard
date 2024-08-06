@@ -45,6 +45,7 @@ public class Contact implements Comparable<Contact>, Serializable {
     private String githubSerialized;
 
     public Contact() {
+        
         this.name = new SimpleStringProperty("");
         this.surname = new SimpleStringProperty("");
         this.city = new SimpleStringProperty("");

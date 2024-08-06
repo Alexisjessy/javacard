@@ -1,18 +1,28 @@
 package fr.afpa;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -25,6 +35,9 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 public class FXMLViewController implements Initializable {
+    /** 
+     * 
+     */
     private static final Pattern PHONE_NUMBER_REGEX = Pattern.compile("^[0-9]{10}$");
     private static final Pattern EMAIL_REGEX = Pattern.compile(
             "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?",
@@ -99,42 +112,66 @@ public class FXMLViewController implements Initializable {
 
     @FXML
     private TextField textFieldNom;
+
     @FXML
     private TextField textFieldPrenom;
+
     @FXML
     private TextField textFieldVille;
+
     @FXML
     private TextField textFieldAdress;
+
     @FXML
     private SplitMenuButton splitMenuButtonGender;
+
     @FXML
     private DatePicker datePickerBirthday;
+
     @FXML
     private TextField textFieldNickname;
+    
     @FXML
     private TextField textFieldPhoneNumber;
+
     @FXML
     private TextField textFieldPhoneNumberProfessional;
+
     @FXML
     private TextField textFieldEmail;
+
     @FXML
     private TextField textFieldPostalCode;
+
     @FXML
     private TextField textFieldGithub;
+
     @FXML
     private Button button_save;
+
     @FXML
     private Button button_delete;
+
     @FXML
     private Label errorText;
+
     @FXML
     private Button deleteButton;
 
     @FXML
     private Button exportButton;
+
     @FXML
     private Label labelResultat;
 
+    @FXML
+    private Label labelResultatJson;
+
+    
+/**
+ * Method to register a contact in the tableview
+ * @param event
+ */
     @FXML
     private void handleButtonActionSave(ActionEvent event) {
         String name = textFieldNom.getText();
@@ -206,6 +243,9 @@ public class FXMLViewController implements Initializable {
             return;
         }
 
+        /**
+         * Implementation
+         */
         Contact newContact = new Contact(name, surname, city, adress, gender, birthday, nickname, phoneNumber,
                 phoneNumberProfessional, email, postalCode, github);
         contacts.add(newContact);
@@ -227,6 +267,10 @@ public class FXMLViewController implements Initializable {
         textFieldGithub.clear();
     }
 
+    /**
+     * Method for Delete A Contact 
+     * @param event
+     */
     @FXML
     private void handleButtonActionCancel(ActionEvent event) {
         textFieldNom.clear();
@@ -251,17 +295,7 @@ public class FXMLViewController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        textFieldNom.setText("EJ");
-        textFieldPrenom.setText("EJ");
-        textFieldEmail.setText("al@gmail.com");
-        textFieldNickname.setText("EJ");
-        textFieldPhoneNumber.setText("0554525251");
-        // textFieldPostalCode.setText("EJ");
-        textFieldVille.setText("EJ");
-        textFieldNickname.setText("EJ");
-        textFieldAdress.setText("EJ");
-
-        // searchTextField.setText("toti");
+       
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         surnameColumn.setCellValueFactory(new PropertyValueFactory<>("surname"));
         adressColumn.setCellValueFactory(new PropertyValueFactory<>("adress"));
@@ -274,7 +308,7 @@ public class FXMLViewController implements Initializable {
         emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
         postalCodeColumn.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
         githubColumn.setCellValueFactory(new PropertyValueFactory<>("github"));
-      
+
         /* Deserialize contacts during initialization */
         String filename = "contacts.ser";
         List<Contact> deserializedContacts = ContactSerialization.deserializeContacts(filename);
@@ -283,7 +317,10 @@ public class FXMLViewController implements Initializable {
         tableView.setItems(contacts);
 
     }
-
+    /**
+     * Metho se
+     * @param event
+     */
     @FXML
     public void search(KeyEvent event) {
         String searchText = searchTextField.getText().toLowerCase();
@@ -291,7 +328,7 @@ public class FXMLViewController implements Initializable {
                 .filter(contact -> contact.getName().toLowerCase().contains(searchText) ||
                         contact.getSurname().toLowerCase().contains(searchText) ||
                         contact.getAdress().toLowerCase().contains(searchText) ||
-                       
+
                         contact.getEmail().toLowerCase().contains(searchText) ||
                         contact.getNickname().toLowerCase().contains(searchText) ||
                         contact.getPhoneNumber().toLowerCase().contains(searchText))
@@ -309,32 +346,117 @@ public class FXMLViewController implements Initializable {
         searchTextField.clear();
         tableView.setItems(contacts);
     }
+
     @FXML
     void handleButtonActionExport(ActionEvent event) {
         Contact selectedContact = tableView.getSelectionModel().getSelectedItem();
         if (selectedContact != null) {
             String filePath = selectedContact.getName() + "_" + selectedContact.getSurname() + ".vcf";
-            selectedContact.exportToVCard(filePath);
-            labelResultat.setText("Contact exporté en tant que VCard !");
+            try {
+                selectedContact.exportToVCard(filePath);
+                labelResultat.setText("Contact exporté en tant que VCard !");
+
+                /* Timer to clear the label after a delay */
+                Timer timer = new Timer();
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+
+                        Platform.runLater(() -> labelResultat.setText(""));
+                    }
+                }, 3000);
+            } catch (Exception e) {
+                labelResultat.setText("Erreur lors de l'exportation du contact : " + e.getMessage());
+            }
         } else {
             labelResultat.setText("Aucun contact sélectionné.");
         }
     }
+
+    @FXML
+    private void handleButtonActionExportJson(ActionEvent event) {
+
+        Contact selectedContact = tableView.getSelectionModel().getSelectedItem();
+        if (selectedContact != null) {
+
+            ContactJsonSerializer serializer = new ContactJsonSerializer();
+
+            try {
+
+                serializer.serialize(contacts, "contact.json");
+                System.out.println("Export avec Succès");
+                labelResultatJson.setText("Contact exporté en tant que fichier Json!");
+                Timer timer = new Timer();
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+
+                        Platform.runLater(() -> labelResultatJson.setText(""));
+                    }
+                }, 3000);
+            } catch (IOException e) {
+                System.out.println("Erreur lors de l'export des contacts:" + e.getMessage());
+            }
+
+        } else {
+            System.out.println("Veuiller selectionner le contact à exporter");
+            labelResultatJson.setText("Aucun contact sélectionné.");
+        }
+
+    }
+
+    public class ContactJsonSerializer {
+
+        // Sérialisation Objet Java vers JSON
+        public void serialize(List<Contact> contacts, String filename) throws IOException {
+
+            ObjectMapper mapper = new ObjectMapper();
+            // activation du module Jackson pour les LocalDate
+
+            mapper.registerModule(new JavaTimeModule());
+            try {
+                // Création du fichier json
+                File file = new File("contacts.json");
+
+                mapper.writeValue(file, contacts);
+                System.out.println("les données sont enregistrées dans: " + file.getAbsolutePath());
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+        }
+    }
+
     // Méthode pour supprimer
     @FXML
     private void delete(ActionEvent event) {
         Contact selectedContact = tableView.getSelectionModel().getSelectedItem();
+        Alert dialogC = new Alert(AlertType.CONFIRMATION);
+        dialogC.setTitle("Alert");
+        dialogC.setHeaderText(null);
+        dialogC.setContentText("Etes vous sur de vouloir supprimer ce contact ?");
+
         if (selectedContact != null) {
-            contacts.remove(selectedContact);
+
+            Optional<ButtonType> answer = dialogC.showAndWait();
+            if (answer.get() == ButtonType.OK) {
+
+                contacts.remove(selectedContact);
+                ContactSerialization.serializeContacts(contacts, "contacts.ser");
+            }
+
         } else {
             System.out.println("Veuiller selectionner le contact à supprimer");
 
         }
+
     }
 
     private Stage stage;
 
     public void setStage(Stage stage) {
         this.stage = stage;
+
     }
 }
