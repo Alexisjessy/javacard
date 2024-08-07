@@ -5,6 +5,7 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitMenuButton?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -16,17 +17,17 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.afpa.FXMLViewController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.afpa.FXMLViewController">
    <children>
-      <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="27.0" prefWidth="767.0" text="Contacts" textAlignment="CENTER">
+      <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="27.0" prefWidth="900.0" style="-fx-background-color: #F5F5DC;" text="Contacts" textAlignment="CENTER">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <HBox spacing="10.0">
+      <HBox onMouseClicked="#handleUnselect" spacing="10.0">
          <children>
             <TextField fx:id="searchTextField" onKeyTyped="#search" prefHeight="25.0" prefWidth="282.0" promptText="search" />
-            <Button fx:id="clearButton" mnemonicParsing="false" onAction="#clearSearch" text="Effacer" />
+            <Button fx:id="clearButton" mnemonicParsing="false" onAction="#clearSearch" style="-fx-background-color: #FFACC8;" text="Effacer" />
          </children>
          <padding>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -54,7 +55,7 @@
             <Insets bottom="5.0" top="5.0" />
          </padding>
       </TableView>
-      <GridPane alignment="CENTER_RIGHT">
+      <GridPane alignment="CENTER_RIGHT" onMouseClicked="#handleUnselect">
         <columnConstraints>
             <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
@@ -66,7 +67,10 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button mnemonicParsing="false" onAction="#delete" text="Supprimer" textFill="RED" GridPane.columnIndex="1" />
+            <Button mnemonicParsing="false" onAction="#delete" style="-fx-background-color: red;" text="Supprimer" textFill="WHITE" GridPane.columnIndex="1">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font></Button>
             
           
             <Button alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#handleButtonActionExport" text="Export-Vcard" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="RIGHT">
@@ -97,7 +101,7 @@
             <VBox>
                <children>
                      
-                    <Label text="Nom*" />
+                          <Label text="Nom*" />
                     <TextField fx:id="textFieldNom" promptText="Nom" />
                </children>
             </VBox>
@@ -136,7 +140,7 @@
                <children>
                     <Label text="Numero de téléphone*" />
                   
-                    <TextField fx:id="textFieldPhoneNumber" promptText="Numero de téléphone" />
+                          <TextField fx:id="textFieldPhoneNumber" promptText="Numero de téléphone" />
                </children>
             </VBox>
             <VBox GridPane.rowIndex="3">
@@ -176,25 +180,33 @@
       </GridPane>
       <HBox>
          <children>
-            <VBox HBox.hgrow="ALWAYS">
-               <children>
-                  <Label fx:id="errorText" prefHeight="25.0" prefWidth="600.0" textFill="red" />
-               </children>
-            </VBox>
+            <ScrollPane prefHeight="111.0" prefWidth="475.0">
+               <content>
+                  <Label fx:id="errorText" textFill="red" />
+               </content>
+            </ScrollPane>
             <VBox>
                <children>
-                  <Label text="Les champs avec *  sont obligatoires" />
-                  <HBox>
+                  <Label alignment="CENTER_RIGHT" text="Les champs avec *  sont obligatoires" textAlignment="RIGHT">
+                     <VBox.margin>
+                        <Insets left="30.0" />
+                     </VBox.margin>
+                  </Label>
+                  <HBox spacing="40.0">
                      <children>
-                          <Button fx:id="button_save" mnemonicParsing="false" onAction="#handleButtonActionSave" prefHeight="25.0" prefWidth="79.0" text="Valider" />
-                          <Button fx:id="button_delete" mnemonicParsing="false" onAction="#handleButtonActionCancel" prefHeight="25.0" prefWidth="69.0" text="Effacer">
+                          <Button fx:id="button_save" mnemonicParsing="false" onAction="#handleButtonActionSave" prefHeight="25.0" prefWidth="79.0" style="-fx-background-color: #08CC0A;" text="Valider" />
+                          <Button fx:id="button_delete" mnemonicParsing="false" onAction="#handleButtonActionCancel" prefHeight="25.0" prefWidth="69.0" style="-fx-background-color: #FFACC8;" text="Effacer">
                            <HBox.margin>
                               <Insets left="10.0" />
-                           </HBox.margin></Button>
+                           </HBox.margin>
+                        </Button>
                      </children>
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
+                     <padding>
+                        <Insets left="30.0" right="30.0" />
+                     </padding>
                   </HBox>
                </children>
             </VBox>

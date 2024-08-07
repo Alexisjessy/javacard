@@ -3,11 +3,11 @@ package fr.afpa;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public abstract class ContactSerialization {
-    private ContactSerialization() {}
+    private ContactSerialization() {
+    }
 
     public static void serializeContacts(ObservableList<Contact> contacts, String filename) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {

@@ -1,6 +1,6 @@
 package fr.afpa;
 
-import java.io.File;
+import java.beans.EventHandler;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -11,10 +11,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
-import fr.afpa.FXMLViewController.ContactJsonSerializer;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -28,12 +24,14 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 public class FXMLViewController implements Initializable {
@@ -244,7 +242,7 @@ public class FXMLViewController implements Initializable {
 
             return;
         }
-         
+
         Contact selectedContact = tableView.getSelectionModel().getSelectedItem();
         if (selectedContact != null) {
             // Mise à jour du contact existant
@@ -260,7 +258,7 @@ public class FXMLViewController implements Initializable {
             selectedContact.setEmail(email);
             selectedContact.setPostalCode(postalCode);
             selectedContact.setGithub(github);
-    
+
             tableView.refresh();
         } else {
             // Ajout d'un nouveau contact
@@ -329,6 +327,26 @@ public class FXMLViewController implements Initializable {
         postalCodeColumn.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
         githubColumn.setCellValueFactory(new PropertyValueFactory<>("github"));
 
+        tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+        // tableView.getSelectionModel().selectedItemProperty().addListener(
+        // (observable, oldValue, newValue) -> {
+        // tableView.getSelectionModel().getSelectedItems().;
+        // tableView.getSelectionModel().clearSelection();
+        // });
+        // EventHandler filter = new EventHandler<MouseEvent>() {
+        // tableView.addEventHandler(MOUSE_CLICKED, click -> click.consume());
+        // tableView.addEventFilter (MouseEvent.MOUSE_PRESSED, new
+        // EventHandler<MouseEvent>() {
+        // @Override
+        // public void handle(MouseEvent mouseEvent) {
+        // tableView.getSelectionModel().clearSelection();
+        // System.out.println("mouse clicked" + mouseEvent.getSource());
+        // }
+        // }
+
+        // });
+
         /* Deserialize contacts during initialization */
         String filename = "contacts.ser";
         List<Contact> deserializedContacts = ContactSerialization.deserializeContacts(filename);
@@ -342,6 +360,12 @@ public class FXMLViewController implements Initializable {
         });
 
     }
+
+    // public void mouseClicked (MouseEvent event) {
+    // tableView.addEventHandler(MOUSE_CLICKED, click -> click.consume());
+    // tableView.addEventFilter(MOUSE_CLICKED, click-> click.consume());
+    // tableView.getSelectionModel().clearSelection();
+    // }
 
     private void fillForm(Contact contact) {
         textFieldNom.setText(contact.getName());
@@ -390,83 +414,82 @@ public class FXMLViewController implements Initializable {
     }
 
     @FXML
-    void handleButtonActionExport(ActionEvent event) {
-        Contact selectedContact = tableView.getSelectionModel().getSelectedItem();
-        if (selectedContact != null) {
-            String filePath = selectedContact.getName() + "_" + selectedContact.getSurname() + ".vcf";
-            try {
-                selectedContact.exportToVCard(filePath);
-                labelResultat.setText("Contact exporté en tant que VCard !");
+    public void handleButtonActionExport(ActionEvent event) {
 
-                /* Timer to clear the label after a delay */
-                Timer timer = new Timer();
-                timer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
+        ObservableList<Contact> selectedContacts = tableView.getSelectionModel().getSelectedItems();
 
-                        Platform.runLater(() -> labelResultat.setText(""));
-                    }
-                }, 3000);
-            } catch (Exception e) {
-                labelResultat.setText("Erreur lors de l'exportation du contact : " + e.getMessage());
-            }
-        } else {
+        if (selectedContacts.size() == 0) {
             labelResultat.setText("Aucun contact sélectionné.");
+        } else { // cas où il y a au moins 1 contact
+
+            for (Contact contact : selectedContacts) {
+                String filePath = contact.getName() + "_" + contact.getSurname() + ".vcf";
+                try {
+                    contact.exportToVCard(filePath);
+                    labelResultat.setText("Contact exporté en tant que VCard !");
+
+                    /* Timer to clear the label after a delay */
+                    Timer timer = new Timer();
+                    timer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+
+                            Platform.runLater(() -> labelResultat.setText(""));
+                        }
+                    }, 3000);
+                } catch (Exception e) {
+                    labelResultat.setText("Erreur lors de l'exportation du contact : " + e.getMessage());
+                }
+            }
         }
+    }
+
+    @FXML
+    public void handleUnselect() {
+        tableView.getSelectionModel().clearSelection();
+
     }
 
     @FXML
     private void handleButtonActionExportJson(ActionEvent event) {
 
-        Contact selectedContact = tableView.getSelectionModel().getSelectedItem();
-        if (selectedContact != null) {
+        ObservableList<Contact> selectedContacts = tableView.getSelectionModel().getSelectedItems();
+        ContactJsonSerializer serializer = new ContactJsonSerializer();
 
-            ContactJsonSerializer serializer = new ContactJsonSerializer();
-
-            try {
-
-                serializer.serialize(contacts, "contact.json");
-                System.out.println("Export avec Succès");
-                labelResultatJson.setText("Contact exporté en tant que fichier Json!");
-                Timer timer = new Timer();
-                timer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-
-                        Platform.runLater(() -> labelResultatJson.setText(""));
-                    }
-                }, 3000);
-            } catch (IOException e) {
-                System.out.println("Erreur lors de l'export des contacts:" + e.getMessage());
-            }
-
-        } else {
-            System.out.println("Veuiller selectionner le contact à exporter");
+        if (selectedContacts.size() == 0) {
             labelResultatJson.setText("Aucun contact sélectionné.");
-        }
+            /* Timer to clear the label after a delay */
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
 
-    }
+                    Platform.runLater(() -> labelResultatJson.setText(""));
+                }
+            }, 3000);
+        } else {
+            for (Contact contact : selectedContacts) {
+                String filePath = contact.getName() + "_" + contact.getSurname() + ".json";
+                // serializer.serialize(selectedContacts, "contact.json")
 
-    public class ContactJsonSerializer {
+                try {
 
-        // Sérialisation Objet Java vers JSON
-        public void serialize(List<Contact> contacts, String filename) throws IOException {
+                    serializer.exportToJson(selectedContacts, filePath);
+                    System.out.println("Export avec Succès");
+                    labelResultatJson.setText("Contact exporté en tant que fichier Json!");
+                    Timer timer = new Timer();
+                    timer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
 
-            ObjectMapper mapper = new ObjectMapper();
-            // activation du module Jackson pour les LocalDate
+                            Platform.runLater(() -> labelResultatJson.setText(""));
+                        }
+                    }, 3000);
 
-            mapper.registerModule(new JavaTimeModule());
-            try {
-                // Création du fichier json
-                File file = new File("contacts.json");
-
-                mapper.writeValue(file, contacts);
-                System.out.println("les données sont enregistrées dans: " + file.getAbsolutePath());
-
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+                } catch (IOException e) {
+                    System.out.println("Erreur lors de l'export des contacts:" + e.getMessage());
+                }
             }
-
         }
     }
 

@@ -1,0 +1,34 @@
+[
+    {
+        "name": "Alexis",
+        "phoneNumberProfessional": "",
+        "email": "al@gmail.com",
+        "adress": "EJ",
+        "github": "",
+        "surname": "Lacroix",
+        "gender": "Woman",
+        "city": "EJ",
+        "birthday": [
+            2024,
+            6,
+            6
+        ],
+        "phoneNumber": "0554525251",
+        "nickname": "EJ",
+        "postalCode": "33100"
+    },
+    {
+        "name": "ZoZo",
+        "phoneNumberProfessional": "",
+        "email": "lo@gmail.com",
+        "adress": "rue du ha",
+        "github": "",
+        "surname": "Alexis",
+        "gender": "Men",
+        "city": "bordeaux",
+        "birthday": null,
+        "phoneNumber": "0644066551",
+        "nickname": "",
+        "postalCode": "33100"
+    }
+]

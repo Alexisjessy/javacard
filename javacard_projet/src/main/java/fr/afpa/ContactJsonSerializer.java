@@ -1,44 +1,36 @@
-// package fr.afpa;
+package fr.afpa;
 
-// import java.io.File;
-// import java.io.IOException;
-// import java.time.LocalDate;
-// import java.util.List;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
-// import com.fasterxml.jackson.databind.ObjectMapper;
-// import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-// public class ContactJsonSerializer {
+import javafx.beans.Observable;
+import javafx.collections.ObservableList;
+
+public class ContactJsonSerializer {
+    // public ContactJsonSerializer(){};
   
-//     // Sérialisation Objet Java vers JSON
-//     public void serialize(List<Contact> contacts, String filename) throws IOException {
+    // Sérialisation Objet Java vers JSON
+    public void exportToJson(ObservableList<Contact> contacts, String filename) throws IOException {
 
-//         Contact contacts = new Contact(name, surname, city, adress, gender, birthday, nickname, phoneNumber,
-//         phoneNumberProfessional, email, postalCode, github);
+        ObjectMapper mapper = new ObjectMapper();
+        // activation du module Jackson pour les LocalDate
 
-//         contacts.add(contacts);
+        mapper.registerModule(new JavaTimeModule());
+        try {
+            // Création du fichier json
+            File file = new File(filename);
 
+            mapper.writeValue(file, contacts);
+            System.out.println("les données sont enregistrées dans: " + file.getAbsolutePath());
 
-//         ObjectMapper mapper = new ObjectMapper();
-//         // activation du module Jackson pour les LocalDate
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
-//         mapper.registerModule(new JavaTimeModule());
-//         try {
-//             // Création du fichier json
-//             File file = new File("contacts.json");
+    }
 
-//             mapper.writeValue(file, contacts);
-//             System.out.println("les données sont enregistrées dans: " + file.getAbsolutePath());
-
-//         } catch (IOException e) {
-//             throw new RuntimeException(e);
-//         }
-
-//         // // Déserialisation du contenu JSON en un objet java
-//         // Contact deserializedContact = mapper.readValue(new File(filePath),
-//         // Contact.class);
-//         // System.out.println(deserializedContact.getName());
-
-//     }
-
-// }
+}

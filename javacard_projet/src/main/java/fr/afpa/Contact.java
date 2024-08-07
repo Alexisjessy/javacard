@@ -45,7 +45,7 @@ public class Contact implements Comparable<Contact>, Serializable {
     private String githubSerialized;
 
     public Contact() {
-        
+
         this.name = new SimpleStringProperty("");
         this.surname = new SimpleStringProperty("");
         this.city = new SimpleStringProperty("");
@@ -60,19 +60,32 @@ public class Contact implements Comparable<Contact>, Serializable {
         this.github = new SimpleStringProperty("");
     }
 
-    public Contact(String name, String surname, String city, String adress, String gender, LocalDate birthday, String nickname,
-                   String phoneNumber, String phoneNumberProfessional, String email, String postalCode, String github) {
+    public Contact(String name, String surname, String city, String adress, String gender, LocalDate birthday,
+            String nickname,
+            String phoneNumber, String phoneNumberProfessional, String email, String postalCode, String github) {
         this.name = new SimpleStringProperty(name);
+        this.nameSerialized = name;
+
         this.surname = new SimpleStringProperty(surname);
+
         this.city = new SimpleStringProperty(city);
+
         this.adress = new SimpleStringProperty(adress);
+
         this.gender = new SimpleStringProperty(gender);
+
         this.birthday = new SimpleObjectProperty<>(birthday);
+
         this.nickname = new SimpleStringProperty(nickname);
+
         this.phoneNumber = new SimpleStringProperty(phoneNumber);
+
         this.phoneNumberProfessional = new SimpleStringProperty(phoneNumberProfessional);
+
         this.email = new SimpleStringProperty(email);
+
         this.postalCode = new SimpleStringProperty(postalCode);
+
         this.github = new SimpleStringProperty(github);
     }
 
@@ -189,19 +202,27 @@ public class Contact implements Comparable<Contact>, Serializable {
         emailSerialized = email.get();
         postalCodeSerialized = postalCode.get();
         githubSerialized = github.get();
+
         oos.defaultWriteObject();
     }
 
     private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException {
+        // lecture par défaut de tous les attributs "non-transient" (tous les attributs
+        // suffixés de "Serialized")
         ois.defaultReadObject();
+
+        // intialisation des champs "StringProperty"
         this.name = new SimpleStringProperty(nameSerialized != null ? nameSerialized : "");
         this.surname = new SimpleStringProperty(surnameSerialized != null ? surnameSerialized : "");
         this.city = new SimpleStringProperty(citySerialized != null ? citySerialized : "");
         this.adress = new SimpleStringProperty(adressSerialized != null ? adressSerialized : "");
         this.gender = new SimpleStringProperty(genderSerialized != null ? genderSerialized : "");
-        this.birthday = birthdaySerialized != null ? new SimpleObjectProperty<>(LocalDate.parse(birthdaySerialized, DateTimeFormatter.ISO_LOCAL_DATE)) : new SimpleObjectProperty<>(null);
+        this.birthday = birthdaySerialized != null
+                ? new SimpleObjectProperty<>(LocalDate.parse(birthdaySerialized, DateTimeFormatter.ISO_LOCAL_DATE))
+                : new SimpleObjectProperty<>(null);
         this.phoneNumber = new SimpleStringProperty(phoneNumberSerialized != null ? phoneNumberSerialized : "");
-        this.phoneNumberProfessional = new SimpleStringProperty(phoneNumberProfessionalSerialized != null ? phoneNumberProfessionalSerialized : "");
+        this.phoneNumberProfessional = new SimpleStringProperty(
+                phoneNumberProfessionalSerialized != null ? phoneNumberProfessionalSerialized : "");
         this.nickname = new SimpleStringProperty(nicknameSerialized != null ? nicknameSerialized : "");
         this.email = new SimpleStringProperty(emailSerialized != null ? emailSerialized : "");
         this.postalCode = new SimpleStringProperty(postalCodeSerialized != null ? postalCodeSerialized : "");
@@ -214,7 +235,8 @@ public class Contact implements Comparable<Contact>, Serializable {
         vCardBuilder.append("VERSION:4.0\n");
         vCardBuilder.append("FN:").append(getName()).append(" ").append(getSurname()).append("\n");
         vCardBuilder.append("N:").append(getSurname()).append(";").append(getName()).append(";;;\n");
-        vCardBuilder.append("ADR:;;").append(getAdress()).append(";").append(getCity()).append(";").append(getPostalCode()).append(";;\n");
+        vCardBuilder.append("ADR:;;").append(getAdress()).append(";").append(getCity()).append(";")
+                .append(getPostalCode()).append(";;\n");
         vCardBuilder.append("TEL:").append(getPhoneNumber()).append("\n");
         vCardBuilder.append("TEL;TYPE=WORK:").append(getPhoneNumberProfessional()).append("\n");
         vCardBuilder.append("EMAIL:").append(getEmail()).append("\n");
@@ -228,14 +250,14 @@ public class Contact implements Comparable<Contact>, Serializable {
             vCardBuilder.append("GENDER:").append(getGender()).append("\n");
         }
         vCardBuilder.append("END:VCARD\n");
-    
+
         try (FileOutputStream fos = new FileOutputStream(new File(filePath))) {
             fos.write(vCardBuilder.toString().getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    
+
     @Override
     public int compareTo(Contact o) {
         return this.name.get().compareTo(o.getName());
