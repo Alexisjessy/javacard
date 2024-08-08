@@ -1,0 +1,10 @@
+BEGIN:VCARD
+VERSION:4.0
+FN:alex alex
+N:alex;alex;;;
+ADR:;;rue du go;Bordeaux;33100;;
+TEL:0652515252
+TEL;TYPE=WORK:
+EMAIL:alexis@gmail.com
+GENDER:Men
+END:VCARD

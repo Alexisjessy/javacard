@@ -24,7 +24,12 @@ public class ContactJsonSerializer {
             // Création du fichier json
             File file = new File(filename);
 
-            mapper.writeValue(file, contacts);
+            if (contacts.size() > 1){
+                mapper.writeValue(file, contacts);
+
+            } else {
+                mapper.writeValue(file, contacts.getFirst());
+            }
             System.out.println("les données sont enregistrées dans: " + file.getAbsolutePath());
 
         } catch (IOException e) {

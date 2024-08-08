@@ -19,7 +19,7 @@ public class JavaFxGridView extends Application {
         FXMLLoader loader = new FXMLLoader(JavaFxGridView.class.getResource("contact.-2.fxml"));
         Parent root = (Parent) loader.load();
         final FXMLViewController controller = loader.getController();
-        controller.setStage(stage);
+        // controller.setStage(stage);
 
         Scene scene = new Scene(root);
         stage.setScene(scene);

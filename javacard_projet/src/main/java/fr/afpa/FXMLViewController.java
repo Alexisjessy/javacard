@@ -544,10 +544,5 @@ public class FXMLViewController implements Initializable {
 
     }
 
-    private Stage stage;
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
-
-    }
+   
 }
