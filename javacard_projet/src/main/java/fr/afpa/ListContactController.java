@@ -1,8 +1,17 @@
 package fr.afpa;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -73,7 +82,7 @@ public class ListContactController {
     // Initialisation des objets avec les champs correspondants en colonne
     @FXML
     private void initialize() {
-       // searchTextField.setText("toti");
+        // searchTextField.setText("toti");
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         surnameColumn.setCellValueFactory(new PropertyValueFactory<>("surname"));
         address.setCellValueFactory(new PropertyValueFactory<>("address"));
@@ -88,30 +97,16 @@ public class ListContactController {
         githubColumn.setCellValueFactory(new PropertyValueFactory<>("github"));
 
         // Implementation
-        contacts.add(new Contact("Toto", "Tata", "69 rue toto", "Male", "20/01/09", "Tota", "123456789",
+        contacts.add(new Contact("Toto", "Tata", "69 rue toto", "Male", LocalDate.of(2020, 5, 13), "Tota", "123456789",
                 "987654321", "john.doe@example.com", "Bordeaux", "12345", "https://github.com/Hadja-Hawa-BAH/"));
-        contacts.add(new Contact("Titi", "Tutu", "56 rue titi", "Female", "20/01/09", "Titu",
-                "123456789", "987654321", "jane.doe@example.com", "Begles", "12345", "https://github.com/Hadja-Hawa-BAH/"));
+        contacts.add(new Contact("Titi", "Tutu", "56 rue titi", "Female", LocalDate.of(2000, 5, 14), "Titu",
+                "123456789", "987654321", "jane.doe@example.com", "Begles", "12345",
+                "https://github.com/Hadja-Hawa-BAH/"));
 
+        System.out.println(contacts.getFirst().getName().toString());
         tableView.setItems(contacts);
     }
 
-    // Gestionnaire d'événement
-
-    // Methode pour rechercher dans la liste
-
-    // public Contact findUsingEnhancedForLoop(
-    // String name, List<Contact> contacts) {
-
-    // for (Contact contact : contacts) {
-
-    // if (contact.getName().equals(name)) {
-    // return contact;
-    // }
-
-    // }
-    // return null;
-    // }
 
     @FXML
     public void search(KeyEvent event) {
@@ -119,7 +114,7 @@ public class ListContactController {
         List<Contact> filteredContacts = contacts.stream()
                 .filter(contact -> contact.getName().toLowerCase().contains(searchText) ||
                         contact.getSurname().toLowerCase().contains(searchText) ||
-                       // contact.getAddress().toLowerCase().contains(searchText) ||
+                        contact.getAddress().toLowerCase().contains(searchText) ||
                         // contact.getBirthday().toLowerCase().contains(searchText) ||
                         contact.getEmail().toLowerCase().contains(searchText) ||
                         contact.getNickname().toLowerCase().contains(searchText) ||
@@ -131,7 +126,8 @@ public class ListContactController {
 
     }
 
-    // Méthode pour effacer le champ de la recherche et réinitialiser la liste des contacts
+    // Méthode pour effacer le champ de la recherche et réinitialiser la liste des
+    // contacts
     @FXML
     public void clearSearch(ActionEvent event) {
         searchTextField.clear();
@@ -142,38 +138,42 @@ public class ListContactController {
     @FXML
     private void delete(ActionEvent event) {
         Contact selectedContact = tableView.getSelectionModel().getSelectedItem();
+
         if (selectedContact != null) {
             contacts.remove(selectedContact);
+
         } else {
             System.out.println("Veuiller selectionner le contact à supprimer");
-
         }
     }
-    
-    //Méthode pour exporter 
-    private void export(ActionEvent event){
+
+    // Méthode pour exporter
+    @FXML
+    private void export(ActionEvent event) {
+        // Serialisation des contacts après l'ajout d'un nouveau contact
+
         Contact selectedContact = tableView.getSelectionModel().getSelectedItem();
         if (selectedContact != null) {
-            contacts.addAll(contacts);
-        }else {
+            // Ajout du contact à la liste des contacts
+
+            // contacts.add(selectedContact);
+
+            ContactJsonSerializerDeserializer serializerDeserializer = new ContactJsonSerializerDeserializer();
+            // serializerDeserializer.main(new ArrayList<>(contacts), "contact.json");
+            //
+            try {
+
+                serializerDeserializer.serialize(contacts, "contact.json");
+                System.out.println("Export avec Succès");
+
+            } catch (IOException e) {
+                System.out.println("Erreur lors de l'export des contacts:" + e.getMessage());
+            }
+
+        } else {
             System.out.println("Veuiller selectionner le contact à exporter");
         }
 
-        //Serialisation des contacts après l'ajout d'un nouveau contact
-       // ContactJsonSerializer.getText(contacts, "contacts.json");
-        
     }
-
-    
-
-   
-
-  
-       
-    
-
-
-
-    
 
 }
