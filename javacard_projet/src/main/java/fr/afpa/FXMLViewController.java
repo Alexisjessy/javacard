@@ -31,6 +31,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -126,6 +127,7 @@ public class FXMLViewController implements Initializable {
 
     @FXML
     private SplitMenuButton splitMenuButtonGender;
+  
 
     @FXML
     private DatePicker datePickerBirthday;
@@ -168,6 +170,8 @@ public class FXMLViewController implements Initializable {
 
     @FXML
     private Label labelResultatJson;
+    @FXML
+    private Button addAllButton;
 
     /**
      * Method to register a contact in the tableview
@@ -285,6 +289,11 @@ public class FXMLViewController implements Initializable {
         textFieldPostalCode.clear();
         textFieldGithub.clear();
     }
+    @FXML
+    private void handleAddAll(ActionEvent event) {
+        // Sélectionner tous les éléments dans la TableView
+        tableView.getSelectionModel().selectAll();
+    }
 
     /**
      * Method for Delete A Contact
@@ -311,6 +320,7 @@ public class FXMLViewController implements Initializable {
     private void handleGenderMenu(ActionEvent event) {
         MenuItem source = (MenuItem) event.getSource();
         splitMenuButtonGender.setText(source.getText());
+        
     }
 
     @Override
@@ -442,6 +452,15 @@ public class FXMLViewController implements Initializable {
         if (selectedContacts.size() == 0) {
             tableView.getSelectionModel().clearSelection();
             labelResultat.setText("Aucun contact sélectionné.");
+             /* Timer to clear the label after a delay */
+             Timer timer = new Timer();
+             timer.schedule(new TimerTask() {
+                 @Override
+                 public void run() {
+
+                     Platform.runLater(() -> labelResultat.setText(""));
+                 }
+             }, 3000);
         } else { // cas où il y a au moins 1 contact
 
             for (Contact contact : selectedContacts) {
@@ -538,7 +557,17 @@ public class FXMLViewController implements Initializable {
             }
 
         } else {
-            System.out.println("Veuiller selectionner le contact à supprimer");
+            labelResultatJson.setText("Aucun contact sélectionné.");
+            /* Timer to clear the label after a delay */
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+
+                    Platform.runLater(() -> labelResultatJson.setText(""));
+                }
+            }, 3000);
+          
 
         }
 

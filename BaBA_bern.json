@@ -1,16 +1,1 @@
-[
-    {
-        "name": "BaBA",
-        "phoneNumberProfessional": "",
-        "email": "go@gmail.com",
-        "adress": "rue go",
-        "github": "",
-        "surname": "bern",
-        "gender": "Men",
-        "city": "mars",
-        "birthday": null,
-        "phoneNumber": "0554515251",
-        "nickname": "",
-        "postalCode": "36000"
-    }
-]
+[{"name":"BaBA","phoneNumberProfessional":"","city":"mars","email":"go@gmail.com","github":"","surname":"bern","adress":"rue go","gender":"Men","postalCode":"36000","nickname":"BABA AU RHUM","phoneNumber":"0554515251","birthday":null}]

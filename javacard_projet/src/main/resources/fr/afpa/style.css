@@ -1,0 +1,188 @@
+/* Global Styles */
+.root {
+    -fx-font-family: 'Roboto', sans-serif;
+    -fx-background-color: #f0f2f5;
+}
+
+/* Header Label */
+.label {
+    -fx-text-fill: #333;
+    -fx-font-size: 14px;
+      -fx-padding: 2px;
+      -fx-margin: 15px;
+      
+}
+
+.label[fx:id="headerLabel"] {
+    -fx-background-color: #673AB7;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 24px;
+    -fx-padding: 15px;
+    
+    -fx-alignment: center;
+   
+}
+
+/* TextField Styles */
+.text-field {
+    -fx-prompt-text-fill: #777;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #D1D9E6;
+    -fx-border-radius: 8px;
+    -fx-padding: 8px 12px;
+    -fx-font-size: 14px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0.0, 0, 1);
+    -fx-margin: 15px;
+}
+
+.text-field:focused {
+    -fx-border-color: #2196F3;
+    -fx-background-color: #E3F2FD;
+}
+
+/* Button Styles */
+.button {
+    -fx-background-color: #2196F3;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 10px 5px;
+    -fx-font-size: 14px;
+    -fx-border-radius: 8px;
+    -fx-cursor: hand;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0.0, 0, 2);
+    -fx-font-weight: bold;
+}
+
+.button:hover {
+    -fx-background-color: #1976D2;
+}
+#addAllButton {
+    -fx-background-color: #007BFF;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 15;
+    -fx-padding: 10 20;
+}
+.button:focused {
+    -fx-background-color: #1976D2;
+}
+
+.button:pressed {
+    -fx-background-color: #1565C0;
+}
+
+.button[style*="-fx-background-color: red;"] {
+    -fx-background-color: #F44336;
+}
+
+.button[style*="-fx-background-color: red;"]:hover {
+    -fx-background-color: #D32F2F;
+}
+
+/* TableView Styles */
+.table-view {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e0e0e0;
+    -fx-selection-bar: #FF5722;
+    -fx-padding: 10px;
+    -fx-border-radius: 8px;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #ECEFF1;
+}
+
+.table-view .column-header, .table-view .filler {
+    -fx-border-color: #D1D9E6;
+}
+
+.table-view .table-row-cell:filled:selected {
+    -fx-background-color: #FF5722;
+    -fx-text-fill: white;
+}
+
+.table-view .table-row-cell:hover {
+    -fx-background-color: #FFCCBC;
+}
+
+/* SplitMenuButton Styles */
+.split-menu-button {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: #ffffff;
+    -fx-border-radius: 8px;
+    -fx-font-weight: bold;
+}
+
+.split-menu-button:focused {
+    -fx-background-color: #43A047;
+}
+.split-menu-button .arrow-button {
+    -fx-background-color: transparent; 
+    -fx-background-image: url("sign.png");
+    -fx-background-size: contain; 
+    -fx-background-repeat: no-repeat; 
+    -fx-background-position: center;
+    -fx-padding: 10px;
+}
+
+/* ScrollPane Styles */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+/* GridPane Layout */
+/* .grid-pane {
+    -fx-padding: 35px;
+    -fx-hgap: 25px;
+    -fx-vgap: 25px;
+} */
+
+/* VBox and HBox Spacing */
+/* .vbox, .hbox {
+    -fx-spacing: 40px;
+} */
+
+/* Labels for Success and Error Messages */
+/* .label[fx:id="labelResultatJson"], .label[fx:id="labelResultat"] {
+    -fx-text-fill: #0b8005;
+    -fx-font-weight: bold;
+    -fx-background-color: #e8f5e9;
+    -fx-padding: 8px;
+    -fx-border-radius: 5px;
+    -fx-effect: dropshadow(gaussian, rgba(0,128,5,0.2), 4, 0.0, 0, 2);
+}
+
+.label[fx:id="labelResultatJson"]:empty, .label[fx:id="labelResultat"]:empty {
+    -fx-background-color: transparent;
+    -fx-effect: none;
+} */
+
+.label#errorText {
+    -fx-text-fill: #d9534f;
+    -fx-font-weight: bold;
+    -fx-background-color: #f8d7da;
+    -fx-padding: 8px;
+    -fx-border-radius: 5px;
+    -fx-effect: dropshadow(gaussian, rgba(217,83,79,0.2), 4, 0.0, 0, 2);
+}
+
+/* Custom TextField with Validation Error */
+.text-field.error {
+    -fx-border-color: #F44336;
+    -fx-background-color: #FFEBEE;
+}
+
+.text-field.error:focused {
+    -fx-background-color: #FFCDD2;
+    -fx-border-color: #D32F2F;
+}
+
+/* Style for required fields indication */
+/* .label:after {
+    content: '*';
+    -fx-text-fill: #D32F2F;
+    -fx-padding: 10 5px;
+    -fx-font-weight: bold;
+} */

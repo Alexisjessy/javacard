@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.afpa.FXMLViewController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.afpa.FXMLViewController">
    <children>
       <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="27.0" prefWidth="900.0" style="-fx-background-color: #F5F5DC;" text="Contacts" textAlignment="CENTER">
          <font>
@@ -27,7 +27,9 @@
       <HBox onMouseClicked="#handleUnselect" spacing="10.0">
          <children>
             <TextField fx:id="searchTextField" onKeyTyped="#search" prefHeight="25.0" prefWidth="282.0" promptText="search" />
+            
             <Button fx:id="clearButton" mnemonicParsing="false" onAction="#clearSearch" style="-fx-background-color: #FFACC8;" text="Effacer" />
+            <Button fx:id="addAllButton" onAction="#handleAddAll" text="Add All" />
          </children>
          <padding>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -36,7 +38,7 @@
             <Insets />
          </VBox.margin>
       </HBox>
-      <TableView fx:id="tableView" accessibleRole="SCROLL_BAR" onMouseClicked="#handleTableViewClick" prefHeight="282.0" prefWidth="900.0">
+      <TableView fx:id="tableView" accessibleRole="SCROLL_BAR" prefHeight="282.0" prefWidth="900.0">
         <columns>
             <TableColumn fx:id="nameColumn" maxWidth="205.0" minWidth="-1.0" prefWidth="100.0" text="Nom" />
           <TableColumn fx:id="surnameColumn" maxWidth="205.0" minWidth="-1.0" prefWidth="100.0" text="Prénom" />
@@ -77,15 +79,18 @@
                <GridPane.margin>
                   <Insets right="10.0" />
                </GridPane.margin></Button>
-            <Button mnemonicParsing="false" onAction="#handleButtonActionExportJson" text="Export-Json" textAlignment="CENTER" GridPane.columnIndex="3">
-               <GridPane.margin>
+           
+               <Button mnemonicParsing="false" onAction="#handleButtonActionExportJson" text="Export-Json" textAlignment="CENTER" GridPane.columnIndex="3">
+               
+
+                  <GridPane.margin>
                   <Insets left="10.0" />
                </GridPane.margin></Button> 
             <Label fx:id="labelResultatJson" text="" textFill="#0b8005" />
         
                   <Label fx:id="labelResultat" text="" textFill="#068610" /> </children>
       </GridPane>
-      <GridPane hgap="10.0" vgap="10.0" VBox.vgrow="SOMETIMES">
+      <GridPane hgap="10.0" prefHeight="285.0" prefWidth="900.0" vgap="10.0" VBox.vgrow="SOMETIMES">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -98,20 +103,20 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <VBox>
+            <VBox prefHeight="88.0" prefWidth="286.0">
                <children>
                      
                           <Label text="Nom*" />
-                    <TextField fx:id="textFieldNom" promptText="Nom" />
+                    <TextField fx:id="textFieldNom" prefHeight="74.0" prefWidth="284.0" promptText="Nom" />
                </children>
             </VBox>
-            <VBox GridPane.columnIndex="1">
+            <VBox prefHeight="89.0" prefWidth="283.0" GridPane.columnIndex="1">
                <children>
                     <Label prefHeight="17.0" text="Prenom*" />
                     <TextField fx:id="textFieldPrenom" prefHeight="25.0" prefWidth="145.0" promptText="Prenom" />
                </children>
             </VBox>
-              <SplitMenuButton fx:id="splitMenuButtonGender" mnemonicParsing="false" text="Genre" GridPane.columnIndex="2">
+              <SplitMenuButton fx:id="splitMenuButtonGender" mnemonicParsing="false" text="Genre" GridPane.columnIndex="2" >
                 <items>
                     <MenuItem onAction="#handleGenderMenu" text="Men" />
                     <MenuItem onAction="#handleGenderMenu" text="Woman" />
@@ -155,7 +160,7 @@
                     <TextField fx:id="textFieldPhoneNumberProfessional" promptText="Numero de téléphone pro" />
                </children>
             </VBox>
-            <VBox GridPane.columnIndex="1" GridPane.rowIndex="3">
+            <VBox prefHeight="79.0" prefWidth="289.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <children>
                     <Label text="Lien page Github" />
                     <TextField fx:id="textFieldGithub" promptText="Lien Github" />
@@ -167,7 +172,7 @@
                     <TextField fx:id="textFieldAdress" promptText="rue des lilas" />
                </children>
             </VBox>
-            <VBox GridPane.columnIndex="2" GridPane.rowIndex="3">
+            <VBox prefHeight="35.0" prefWidth="283.0" GridPane.columnIndex="2" GridPane.rowIndex="3">
                <children>
                     <Label text="Code postal*" />
                     <TextField fx:id="textFieldPostalCode" promptText="code postal" />
