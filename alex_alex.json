@@ -1,0 +1,16 @@
+[
+    {
+        "name": "alex",
+        "phoneNumberProfessional": "",
+        "adress": "rue du go",
+        "github": "",
+        "gender": "Men",
+        "city": "Bordeaux",
+        "surname": "alex",
+        "email": "alexis@gmail.com",
+        "postalCode": "33100",
+        "birthday": null,
+        "phoneNumber": "0652515252",
+        "nickname": ""
+    }
+]
