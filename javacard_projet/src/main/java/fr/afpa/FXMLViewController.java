@@ -1,5 +1,6 @@
 package fr.afpa;
 
+import javafx.util.Duration;
 import javafx.event.EventHandler;
 import java.io.IOException;
 import java.net.URL;
@@ -30,6 +31,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
@@ -127,7 +129,6 @@ public class FXMLViewController implements Initializable {
 
     @FXML
     private SplitMenuButton splitMenuButtonGender;
-  
 
     @FXML
     private DatePicker datePickerBirthday;
@@ -172,6 +173,9 @@ public class FXMLViewController implements Initializable {
     private Label labelResultatJson;
     @FXML
     private Button addAllButton;
+
+    @FXML
+    private Tooltip tooltip;
 
     /**
      * Method to register a contact in the tableview
@@ -289,6 +293,7 @@ public class FXMLViewController implements Initializable {
         textFieldPostalCode.clear();
         textFieldGithub.clear();
     }
+
     @FXML
     private void handleAddAll(ActionEvent event) {
         // Sélectionner tous les éléments dans la TableView
@@ -320,12 +325,11 @@ public class FXMLViewController implements Initializable {
     private void handleGenderMenu(ActionEvent event) {
         MenuItem source = (MenuItem) event.getSource();
         splitMenuButtonGender.setText(source.getText());
-        
+
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         surnameColumn.setCellValueFactory(new PropertyValueFactory<>("surname"));
         adressColumn.setCellValueFactory(new PropertyValueFactory<>("adress"));
@@ -339,22 +343,38 @@ public class FXMLViewController implements Initializable {
         postalCodeColumn.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
         githubColumn.setCellValueFactory(new PropertyValueFactory<>("github"));
 
-        // Customisation du comportement de la TableView
-        // activation de la sélection multiple
+        // Activation de la sélection multiple
         tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
-        // Début de la pirouette de traitement des sélections
-        // Création d'un EventHandler (déclaré en dessous)
-        EventHandler<MouseEvent> onClick = this::handleTableRowMouseClick; // référence de méthode -> lien vers la méthode
-        // on ajouter le EventHandler à chaque ligne du tableau
-        tableView.setRowFactory(param -> {
+        // Ajout du Tooltip personnalisé à chaque ligne
+        tableView.setRowFactory(tv -> {
             TableRow<Contact> row = new TableRow<>();
-            // ajout du EventHandler sur la ligne
-            row.setOnMouseClicked(onClick);
+            Tooltip tooltip = new Tooltip();
+
+            // Ajout d'un EventHandler pour afficher le Tooltip au passage de la souris
+            row.setOnMouseEntered(event -> {
+                if (!row.isEmpty()) {
+                    Contact contact = row.getItem();
+                    tooltip.setText("Nom: " + contact.getName() + "\n"
+                            + "Prénom: " + contact.getSurname() + "\n"
+                            + "Adresse: " + contact.getAdress() + "\n"
+                            + "Email: " + contact.getEmail() + "\n"
+                            + "Téléphone: " + contact.getPhoneNumber());
+                    tooltip.setShowDelay(Duration.millis(500));  // Délai avant l'affichage du Tooltip
+                    tooltip.setStyle("-fx-font-size: 12px; -fx-text-fill: #333; -fx-background-color: #f9f9f9; -fx-border-color: #ccc;");
+                    row.setTooltip(tooltip);
+                }
+            });
+
+            // Supprime le Tooltip lorsque la souris quitte la ligne
+            row.setOnMouseExited(event -> row.setTooltip(null));
+
+            // Ajout d'un EventHandler pour gérer le clic sur une ligne
+            row.setOnMouseClicked(this::handleTableRowMouseClick);
             return row;
         });
 
-        /* Deserialize contacts during initialization */
+        // Désérialisation des contacts lors de l'initialisation
         String filename = "contacts.ser";
         List<Contact> deserializedContacts = ContactSerialization.deserializeContacts(filename);
         contacts.addAll(deserializedContacts);
@@ -365,14 +385,19 @@ public class FXMLViewController implements Initializable {
                 fillForm(newValue);
             }
         });
-
     }
 
-    // public void mouseClicked (MouseEvent event) {
-    // tableView.addEventHandler(MOUSE_CLICKED, click -> click.consume());
-    // tableView.addEventFilter(MOUSE_CLICKED, click-> click.consume());
-    // tableView.getSelectionModel().clearSelection();
-    // }
+    private void handleTableRowMouseClick(MouseEvent event) {
+        if (event.getButton() == MouseButton.PRIMARY) {
+            if (event.getSource() instanceof TableRow) {
+                TableRow<Contact> row = (TableRow<Contact>) event.getSource();
+                if (row.getItem() == null) {
+                    tableView.getSelectionModel().clearSelection();
+                    event.consume();
+                }
+            }
+        }
+    }
 
     private void fillForm(Contact contact) {
         textFieldNom.setText(contact.getName());
@@ -389,29 +414,22 @@ public class FXMLViewController implements Initializable {
         textFieldGithub.setText(contact.getGithub());
     }
 
-    /**
-     * Méthode permettant de gérer le clic sur le tableau (n'importe quand, même si pas de "contact" sélectionné)
-     * Pemret  de gérer la dé-sélection
-     * 
-     * @param event Evenement souris !
-     */
-    private void handleTableRowMouseClick(MouseEvent event) {
-        // vérification qu'il s'agit bien du clic gauche (PRIMARY)
-        if (event.getButton() == MouseButton.PRIMARY) {
-
-            // récupération de la source du clic
-            @SuppressWarnings("unchecked") // désactivation du Warning indiquant que le cast (opération de transformation) est dangereux
-            TableRow<Contact> row = (TableRow<Contact>) event.getSource();
-
-            // vérification de la séleciton (getItem renvoie "null" si pas de sélection)
-            if (row.getItem() == null) {
-                // on désélectionne tout
-                tableView.getSelectionModel().clearSelection();
-                // on détruit l'évènement
-                event.consume();
-            }
-        }
+    private void clearForm() {
+        textFieldNom.clear();
+        textFieldPrenom.clear();
+        textFieldVille.clear();
+        textFieldAdress.clear();
+        splitMenuButtonGender.setText("Genre");
+        datePickerBirthday.setValue(null);
+        textFieldNickname.clear();
+        textFieldPhoneNumber.clear();
+        textFieldPhoneNumberProfessional.clear();
+        textFieldEmail.clear();
+        textFieldPostalCode.clear();
+        textFieldGithub.clear();
     }
+
+   
 
     /**
      * Metho se
@@ -452,15 +470,15 @@ public class FXMLViewController implements Initializable {
         if (selectedContacts.size() == 0) {
             tableView.getSelectionModel().clearSelection();
             labelResultat.setText("Aucun contact sélectionné.");
-             /* Timer to clear the label after a delay */
-             Timer timer = new Timer();
-             timer.schedule(new TimerTask() {
-                 @Override
-                 public void run() {
+            /* Timer to clear the label after a delay */
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
 
-                     Platform.runLater(() -> labelResultat.setText(""));
-                 }
-             }, 3000);
+                    Platform.runLater(() -> labelResultat.setText(""));
+                }
+            }, 3000);
         } else { // cas où il y a au moins 1 contact
 
             for (Contact contact : selectedContacts) {
@@ -484,7 +502,6 @@ public class FXMLViewController implements Initializable {
             }
         }
     }
-
 
     @FXML
     public void handleUnselect() {
@@ -538,6 +555,8 @@ public class FXMLViewController implements Initializable {
         }
     }
 
+   
+   
     // Méthode pour supprimer
     @FXML
     private void delete(ActionEvent event) {
@@ -567,11 +586,9 @@ public class FXMLViewController implements Initializable {
                     Platform.runLater(() -> labelResultatJson.setText(""));
                 }
             }, 3000);
-          
 
         }
 
     }
 
-   
 }
