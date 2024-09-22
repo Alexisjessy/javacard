@@ -1,5 +1,5 @@
-package fr.afpa;
 
+package fr.afpa;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.property.ObjectProperty;
@@ -16,7 +16,7 @@ import java.io.ObjectOutputStream;
 public class Contact implements Comparable<Contact>, Serializable {
 
     private static final long serialVersionUID = 1L;
-
+    private int id;
     private transient StringProperty name;
     private transient StringProperty surname;
     private transient StringProperty city;
@@ -90,6 +90,13 @@ public class Contact implements Comparable<Contact>, Serializable {
     }
 
     // Getters and Setters
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name.get();
     }
@@ -187,47 +194,47 @@ public class Contact implements Comparable<Contact>, Serializable {
     }
 
     // Serialization methods
-    private void writeObject(ObjectOutputStream oos) throws IOException {
-        nameSerialized = name.get();
-        surnameSerialized = surname.get();
-        citySerialized = city.get();
-        adressSerialized = adress.get();
-        genderSerialized = gender.get();
-        if (birthday.get() != null) {
-            birthdaySerialized = birthday.get().format(DateTimeFormatter.ISO_LOCAL_DATE);
-        }
-        phoneNumberSerialized = phoneNumber.get();
-        phoneNumberProfessionalSerialized = phoneNumberProfessional.get();
-        nicknameSerialized = nickname.get();
-        emailSerialized = email.get();
-        postalCodeSerialized = postalCode.get();
-        githubSerialized = github.get();
+    // private void writeObject(ObjectOutputStream oos) throws IOException {
+    //     nameSerialized = name.get();
+    //     surnameSerialized = surname.get();
+    //     citySerialized = city.get();
+    //     adressSerialized = adress.get();
+    //     genderSerialized = gender.get();
+    //     if (birthday.get() != null) {
+    //         birthdaySerialized = birthday.get().format(DateTimeFormatter.ISO_LOCAL_DATE);
+    //     }
+    //     phoneNumberSerialized = phoneNumber.get();
+    //     phoneNumberProfessionalSerialized = phoneNumberProfessional.get();
+    //     nicknameSerialized = nickname.get();
+    //     emailSerialized = email.get();
+    //     postalCodeSerialized = postalCode.get();
+    //     githubSerialized = github.get();
 
-        oos.defaultWriteObject();
-    }
+    //     oos.defaultWriteObject();
+    // }
 
-    private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException {
+    // private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException {
         // lecture par défaut de tous les attributs "non-transient" (tous les attributs
         // suffixés de "Serialized")
-        ois.defaultReadObject();
+        // ois.defaultReadObject();
 
         // intialisation des champs "StringProperty"
-        this.name = new SimpleStringProperty(nameSerialized != null ? nameSerialized : "");
-        this.surname = new SimpleStringProperty(surnameSerialized != null ? surnameSerialized : "");
-        this.city = new SimpleStringProperty(citySerialized != null ? citySerialized : "");
-        this.adress = new SimpleStringProperty(adressSerialized != null ? adressSerialized : "");
-        this.gender = new SimpleStringProperty(genderSerialized != null ? genderSerialized : "");
-        this.birthday = birthdaySerialized != null
-                ? new SimpleObjectProperty<>(LocalDate.parse(birthdaySerialized, DateTimeFormatter.ISO_LOCAL_DATE))
-                : new SimpleObjectProperty<>(null);
-        this.phoneNumber = new SimpleStringProperty(phoneNumberSerialized != null ? phoneNumberSerialized : "");
-        this.phoneNumberProfessional = new SimpleStringProperty(
-                phoneNumberProfessionalSerialized != null ? phoneNumberProfessionalSerialized : "");
-        this.nickname = new SimpleStringProperty(nicknameSerialized != null ? nicknameSerialized : "");
-        this.email = new SimpleStringProperty(emailSerialized != null ? emailSerialized : "");
-        this.postalCode = new SimpleStringProperty(postalCodeSerialized != null ? postalCodeSerialized : "");
-        this.github = new SimpleStringProperty(githubSerialized != null ? githubSerialized : "");
-    }
+    //     this.name = new SimpleStringProperty(nameSerialized != null ? nameSerialized : "");
+    //     this.surname = new SimpleStringProperty(surnameSerialized != null ? surnameSerialized : "");
+    //     this.city = new SimpleStringProperty(citySerialized != null ? citySerialized : "");
+    //     this.adress = new SimpleStringProperty(adressSerialized != null ? adressSerialized : "");
+    //     this.gender = new SimpleStringProperty(genderSerialized != null ? genderSerialized : "");
+    //     this.birthday = birthdaySerialized != null
+    //             ? new SimpleObjectProperty<>(LocalDate.parse(birthdaySerialized, DateTimeFormatter.ISO_LOCAL_DATE))
+    //             : new SimpleObjectProperty<>(null);
+    //     this.phoneNumber = new SimpleStringProperty(phoneNumberSerialized != null ? phoneNumberSerialized : "");
+    //     this.phoneNumberProfessional = new SimpleStringProperty(
+    //             phoneNumberProfessionalSerialized != null ? phoneNumberProfessionalSerialized : "");
+    //     this.nickname = new SimpleStringProperty(nicknameSerialized != null ? nicknameSerialized : "");
+    //     this.email = new SimpleStringProperty(emailSerialized != null ? emailSerialized : "");
+    //     this.postalCode = new SimpleStringProperty(postalCodeSerialized != null ? postalCodeSerialized : "");
+    //     this.github = new SimpleStringProperty(githubSerialized != null ? githubSerialized : "");
+    // }
 
     public void exportToVCard(String filePath) {
         StringBuilder vCardBuilder = new StringBuilder();
@@ -258,6 +265,7 @@ public class Contact implements Comparable<Contact>, Serializable {
         }
     }
 
+      
     @Override
     public int compareTo(Contact o) {
         return this.name.get().compareTo(o.getName());

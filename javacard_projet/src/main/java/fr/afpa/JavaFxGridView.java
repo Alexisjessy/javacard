@@ -25,6 +25,7 @@ public class JavaFxGridView extends Application {
         stage.setTitle("Formulaire de Contact");
         stage.getIcons().add(new Image("https://th.bing.com/th/id/R.89027f344393f7a12327413b4aa7cb26?rik=h9mPqEYfhctGfw&riu=http%3a%2f%2f1000logos.net%2fwp-content%2fuploads%2f2017%2f05%2fPlayboy-symbol.jpg&ehk=NMh359TsTdB6FXv9waahFuPIsWTVguYN9pzXUnaVvTM%3d&risl=&pid=ImgRaw&r=0"));
         stage.show();
+        ContactDAO contactDAO = new ContactDAOImpl();
        
     }
 

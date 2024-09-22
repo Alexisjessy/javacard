@@ -1,4 +1,5 @@
 package fr.afpa;
+import fr.afpa.ContactDAO;
 
 import javafx.util.Duration;
 import javafx.event.EventHandler;
@@ -43,6 +44,12 @@ public class FXMLViewController implements Initializable {
     /** 
      * 
      */
+    public FXMLViewController() {
+        this.contactService = new ContactService();
+    }
+    private ContactService contactService;
+    private ContactDAO contactDAO;
+    private int id;
     private static final Pattern PHONE_NUMBER_REGEX = Pattern.compile("^[0-9]{10}$");
     private static final Pattern EMAIL_REGEX = Pattern.compile(
             "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?",
@@ -69,7 +76,12 @@ public class FXMLViewController implements Initializable {
     }
 
     private ObservableList<Contact> contacts = FXCollections.observableArrayList();
-
+    @FXML
+    public void initialize() {
+   
+        List<Contact> contacts = contactService.getAllContacts();
+      
+    }
     @FXML
     private TextField searchTextField;
 
@@ -184,6 +196,7 @@ public class FXMLViewController implements Initializable {
      */
     @FXML
     private void handleButtonActionSave(ActionEvent event) {
+       
         String name = textFieldNom.getText();
         String surname = textFieldPrenom.getText();
         String city = textFieldVille.getText();
@@ -268,17 +281,28 @@ public class FXMLViewController implements Initializable {
             selectedContact.setEmail(email);
             selectedContact.setPostalCode(postalCode);
             selectedContact.setGithub(github);
-
+            //  contactService.getContactById(selectedContact.getId());
+             
+            contactService.updateContact(selectedContact.getId(), name,surname, city, adress, gender, birthday,  nickname, phoneNumber, phoneNumberProfessional, email, postalCode,  github);
             tableView.refresh();
+            
         } else {
             // Ajout d'un nouveau contact
             Contact newContact = new Contact(name, surname, city, adress, gender, birthday, nickname, phoneNumber,
                     phoneNumberProfessional, email, postalCode, github);
+        
+            ContactDAO contactDAO = new ContactDAOImpl();
+            contactDAO.addContact(newContact);
+    
+            // Mise à jour de la TableView
             contacts.add(newContact);
+            tableView.refresh();
+            clearForm();
+       
         }
 
         /* Serialize contacts after adding a new one */
-        ContactSerialization.serializeContacts(contacts, "contacts.ser");
+        // ContactSerialization.serializeContacts(contacts, "contacts.ser");
 
         textFieldNom.clear();
         textFieldPrenom.clear();
@@ -345,7 +369,10 @@ public class FXMLViewController implements Initializable {
 
         // Activation de la sélection multiple
         tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-
+        // contacts.addAll(contactDAO.getAllContacts());
+        contacts.addAll(contactService.getAllContacts());
+    
+        tableView.setItems(contacts);
         // Ajout du Tooltip personnalisé à chaque ligne
         tableView.setRowFactory(tv -> {
             TableRow<Contact> row = new TableRow<>();
@@ -375,10 +402,11 @@ public class FXMLViewController implements Initializable {
         });
 
         // Désérialisation des contacts lors de l'initialisation
-        String filename = "contacts.ser";
-        List<Contact> deserializedContacts = ContactSerialization.deserializeContacts(filename);
-        contacts.addAll(deserializedContacts);
-
+        // String filename = "contacts.ser";
+        // List<Contact> deserializedContacts = ContactSerialization.deserializeContacts(filename);
+        // contacts.addAll(deserializedContacts);
+        //    ContactDAO contactDAO = new ContactDAOImpl();
+        //  contacts.getAllContacts(contactDAO.getAllContacts());
         tableView.setItems(contacts);
         tableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
@@ -570,9 +598,10 @@ public class FXMLViewController implements Initializable {
 
             Optional<ButtonType> answer = dialogC.showAndWait();
             if (answer.get() == ButtonType.OK) {
-
+                contactService.deleteContact(selectedContact.getId());
                 contacts.remove(selectedContact);
-                ContactSerialization.serializeContacts(contacts, "contacts.ser");
+               
+                // ContactSerialization.serializeContacts(contacts, "contacts.ser");
             }
 
         } else {
