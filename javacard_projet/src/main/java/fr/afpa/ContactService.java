@@ -5,7 +5,7 @@ import java.util.List;
 
 public class ContactService {
 
-    private ContactDAO contactDAO;
+    private DAOInterface contactDAO;
 
     public ContactService() {
         this.contactDAO = new ContactDAOImpl(); 
@@ -26,15 +26,15 @@ public class ContactService {
         contact.setPostalCode(postalCode);
         contact.setGithub(github);
         
-        contactDAO.addContact(contact);
+        contactDAO.add(contact);
     }
 
     public List<Contact> getAllContacts() {
-        return contactDAO.getAllContacts();
+        return contactDAO.getAll();
     }
 
     public void updateContact(int id, String name, String surname, String city, String adress, String gender, LocalDate birthday, String nickname, String phoneNumber, String phoneNumberProfessional, String email, String postalCode, String github) {
-        Contact contact = contactDAO.getContactById(id);
+        Contact contact = (Contact) contactDAO.getById(id);
         if (contact != null) {
             contact.setName(name);
             contact.setSurname(surname);
@@ -49,17 +49,17 @@ public class ContactService {
             contact.setPostalCode(postalCode);
             contact.setGithub(github);
 
-            contactDAO.updateContact(contact);
+            contactDAO.update(contact);
         } else {
             System.out.println("Contact not found with ID: " + id);
         }
     }
 
     public void deleteContact(int id) {
-        contactDAO.deleteContact(id);
+        contactDAO.delete(id);
     }
 
     public Contact getContactById(int id) {
-        return contactDAO.getContactById(id);
+        return (Contact) contactDAO.getById(id);
     }
 }

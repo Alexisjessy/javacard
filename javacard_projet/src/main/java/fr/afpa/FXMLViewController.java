@@ -1,5 +1,5 @@
 package fr.afpa;
-import fr.afpa.ContactDAO;
+import fr.afpa.DAOInterface;
 
 import javafx.util.Duration;
 import javafx.event.EventHandler;
@@ -48,7 +48,7 @@ public class FXMLViewController implements Initializable {
         this.contactService = new ContactService();
     }
     private ContactService contactService;
-    private ContactDAO contactDAO;
+    private DAOInterface contactDAO;
     private int id;
     private static final Pattern PHONE_NUMBER_REGEX = Pattern.compile("^[0-9]{10}$");
     private static final Pattern EMAIL_REGEX = Pattern.compile(
@@ -291,8 +291,8 @@ public class FXMLViewController implements Initializable {
             Contact newContact = new Contact(name, surname, city, adress, gender, birthday, nickname, phoneNumber,
                     phoneNumberProfessional, email, postalCode, github);
         
-            ContactDAO contactDAO = new ContactDAOImpl();
-            contactDAO.addContact(newContact);
+            DAOInterface contactDAO = new ContactDAOImpl();
+            contactDAO.add(newContact);
     
             // Mise à jour de la TableView
             contacts.add(newContact);

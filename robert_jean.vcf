@@ -1,0 +1,11 @@
+BEGIN:VCARD
+VERSION:4.0
+FN:robert jean
+N:jean;robert;;;
+ADR:;;rue de lolo;Bordeaux;33000;;
+TEL:0665252155
+TEL;TYPE=WORK:
+EMAIL:jean@gmail.com
+BDAY:2024-08-26
+GENDER:Men
+END:VCARD
