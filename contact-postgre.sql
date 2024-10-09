@@ -1,0 +1,15 @@
+CREATE TABLE public.contact_DAO (
+	id serial4 NOT NULL,
+	"name" varchar(100) NOT NULL,
+	surname varchar(200) NOT NULL,
+	city varchar(50) NOT NULL,
+	gender varchar(10) NOT NULL,
+	birthday date NULL,
+	phone_number varchar(50) NOT NULL,
+	phone_number_professional varchar(50) NULL,
+	nickname varchar(200) NULL,
+	email varchar(250) NOT NULL,
+	postal_code varchar NOT NULL,
+	github varchar(250) NULL,
+	adress varchar(200) NOT NULL,
+	CONSTRAINT contact_pkey PRIMARY KEY (id))

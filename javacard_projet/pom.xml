@@ -20,7 +20,11 @@
             <artifactId>javafx-fxml</artifactId>
             <version>22.0.2</version>
         </dependency>
-       
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.4</version>
+        </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>

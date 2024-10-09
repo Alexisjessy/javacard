@@ -34,7 +34,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.Stage;
 
 public class FXMLViewController implements Initializable {
     /** 
@@ -176,6 +175,7 @@ public class FXMLViewController implements Initializable {
      */
     @FXML
     private void handleButtonActionSave(ActionEvent event) {
+        System.out.println("save");
         String name = textFieldNom.getText();
         String surname = textFieldPrenom.getText();
         String city = textFieldVille.getText();
@@ -264,13 +264,17 @@ public class FXMLViewController implements Initializable {
             tableView.refresh();
         } else {
             // Ajout d'un nouveau contact
+            ContactDAO contactDAO = new ContactDAO();
             Contact newContact = new Contact(name, surname, city, adress, gender, birthday, nickname, phoneNumber,
                     phoneNumberProfessional, email, postalCode, github);
             contacts.add(newContact);
+            System.out.println("nouveau contact" + newContact);
+            // Appel de la methode addContact
+            contactDAO.addContact(newContact);
         }
 
         /* Serialize contacts after adding a new one */
-        ContactSerialization.serializeContacts(contacts, "contacts.ser");
+        // ContactSerialization.serializeContacts(contacts, "contacts.ser");
 
         textFieldNom.clear();
         textFieldPrenom.clear();
@@ -332,10 +336,13 @@ public class FXMLViewController implements Initializable {
         // Customisation du comportement de la TableView
         // activation de la sélection multiple
         tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        ContactDAO contactDAO = new ContactDAO();
+        contactDAO.getAll();
 
         // Début de la pirouette de traitement des sélections
         // Création d'un EventHandler (déclaré en dessous)
-        EventHandler<MouseEvent> onClick = this::handleTableRowMouseClick; // référence de méthode -> lien vers la méthode
+        EventHandler<MouseEvent> onClick = this::handleTableRowMouseClick; // référence de méthode -> lien vers la
+                                                                           // méthode
         // on ajouter le EventHandler à chaque ligne du tableau
         tableView.setRowFactory(param -> {
             TableRow<Contact> row = new TableRow<>();
@@ -344,10 +351,11 @@ public class FXMLViewController implements Initializable {
             return row;
         });
 
-        /* Deserialize contacts during initialization */
-        String filename = "contacts.ser";
-        List<Contact> deserializedContacts = ContactSerialization.deserializeContacts(filename);
-        contacts.addAll(deserializedContacts);
+        // /* Deserialize contacts during initialization */
+        // String filename = "contacts.ser";
+        // List<Contact> deserializedContacts =
+        // ContactSerialization.deserializeContacts(filename);
+        // contacts.addAll(deserializedContacts);
 
         tableView.setItems(contacts);
         tableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -358,9 +366,9 @@ public class FXMLViewController implements Initializable {
 
     }
 
-    // public void mouseClicked (MouseEvent event) {
+    // public void mouseClicked(MouseEvent event) {
     // tableView.addEventHandler(MOUSE_CLICKED, click -> click.consume());
-    // tableView.addEventFilter(MOUSE_CLICKED, click-> click.consume());
+    // tableView.addEventFilter(MOUSE_CLICKED, click -> click.consume());
     // tableView.getSelectionModel().clearSelection();
     // }
 
@@ -380,8 +388,9 @@ public class FXMLViewController implements Initializable {
     }
 
     /**
-     * Méthode permettant de gérer le clic sur le tableau (n'importe quand, même si pas de "contact" sélectionné)
-     * Pemret  de gérer la dé-sélection
+     * Méthode permettant de gérer le clic sur le tableau (n'importe quand, même si
+     * pas de "contact" sélectionné)
+     * Pemret de gérer la dé-sélection
      * 
      * @param event Evenement souris !
      */
@@ -390,7 +399,8 @@ public class FXMLViewController implements Initializable {
         if (event.getButton() == MouseButton.PRIMARY) {
 
             // récupération de la source du clic
-            @SuppressWarnings("unchecked") // désactivation du Warning indiquant que le cast (opération de transformation) est dangereux
+            @SuppressWarnings("unchecked") // désactivation du Warning indiquant que le cast (opération de
+                                           // transformation) est dangereux
             TableRow<Contact> row = (TableRow<Contact>) event.getSource();
 
             // vérification de la séleciton (getItem renvoie "null" si pas de sélection)
@@ -466,7 +476,6 @@ public class FXMLViewController implements Initializable {
         }
     }
 
-
     @FXML
     public void handleUnselect() {
         tableView.getSelectionModel().clearSelection();
@@ -502,17 +511,15 @@ public class FXMLViewController implements Initializable {
                     labelResultatJson.setText("Contact exporté en tant que fichier Json!");
                     Timer timer = new Timer();
                     timer.schedule(new TimerTask() {
-
                         @Override
                         public void run() {
 
                             Platform.runLater(() -> labelResultatJson.setText(""));
                         }
+
                     }, 3000);
 
-                } catch (
-
-                IOException e) {
+                } catch (IOException e) {
                     System.out.println("Erreur lors de l'export des contacts:" + e.getMessage());
                 }
             }
@@ -534,7 +541,11 @@ public class FXMLViewController implements Initializable {
             if (answer.get() == ButtonType.OK) {
 
                 contacts.remove(selectedContact);
-                ContactSerialization.serializeContacts(contacts, "contacts.ser");
+
+                // Appel de la méthode delete de la DAO
+                ContactDAO contactDAO = new ContactDAO();
+                contactDAO.delete(selectedContact);
+                // ContactSerialization.serializeContacts(contacts, "contacts.ser");
             }
 
         } else {
@@ -544,5 +555,4 @@ public class FXMLViewController implements Initializable {
 
     }
 
-   
 }

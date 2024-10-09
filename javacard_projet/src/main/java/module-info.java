@@ -6,7 +6,8 @@ module fr.afpa {
     requires com.fasterxml.jackson.datatype.jsr310;
     requires javafx.base;
     requires java.desktop;
+    requires transitive java.sql;
 
-    opens fr.afpa to javafx.fxml, com.fasterxml.jackson.databind, javafx.base, java.desktop;
+    opens fr.afpa to javafx.fxml, com.fasterxml.jackson.databind, javafx.base, java.desktop, java.sql;
     exports fr.afpa;
 }

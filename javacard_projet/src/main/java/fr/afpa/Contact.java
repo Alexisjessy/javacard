@@ -10,13 +10,13 @@ import java.time.format.DateTimeFormatter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+
 
 public class Contact implements Comparable<Contact>, Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    private int id;
     private transient StringProperty name;
     private transient StringProperty surname;
     private transient StringProperty city;
@@ -31,18 +31,18 @@ public class Contact implements Comparable<Contact>, Serializable {
     private transient StringProperty github;
 
     /* Fields for serialization */
-    private String nameSerialized;
-    private String surnameSerialized;
-    private String citySerialized;
-    private String adressSerialized;
-    private String genderSerialized;
-    private String birthdaySerialized;
-    private String phoneNumberSerialized;
-    private String phoneNumberProfessionalSerialized;
-    private String nicknameSerialized;
-    private String emailSerialized;
-    private String postalCodeSerialized;
-    private String githubSerialized;
+    // private String nameSerialized;
+    // private String surnameSerialized;
+    // private String citySerialized;
+    // private String adressSerialized;
+    // private String genderSerialized;
+    // private String birthdaySerialized;
+    // private String phoneNumberSerialized;
+    // private String phoneNumberProfessionalSerialized;
+    // private String nicknameSerialized;
+    // private String emailSerialized;
+    // private String postalCodeSerialized;
+    // private String githubSerialized; 
 
     public Contact() {
 
@@ -64,7 +64,7 @@ public class Contact implements Comparable<Contact>, Serializable {
             String nickname,
             String phoneNumber, String phoneNumberProfessional, String email, String postalCode, String github) {
         this.name = new SimpleStringProperty(name);
-        this.nameSerialized = name;
+        // this.nameSerialized = name;
 
         this.surname = new SimpleStringProperty(surname);
 
@@ -90,8 +90,17 @@ public class Contact implements Comparable<Contact>, Serializable {
     }
 
     // Getters and Setters
+    
     public String getName() {
         return name.get();
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setName(String name) {
@@ -186,48 +195,48 @@ public class Contact implements Comparable<Contact>, Serializable {
         this.github.set(github);
     }
 
-    // Serialization methods
-    private void writeObject(ObjectOutputStream oos) throws IOException {
-        nameSerialized = name.get();
-        surnameSerialized = surname.get();
-        citySerialized = city.get();
-        adressSerialized = adress.get();
-        genderSerialized = gender.get();
-        if (birthday.get() != null) {
-            birthdaySerialized = birthday.get().format(DateTimeFormatter.ISO_LOCAL_DATE);
-        }
-        phoneNumberSerialized = phoneNumber.get();
-        phoneNumberProfessionalSerialized = phoneNumberProfessional.get();
-        nicknameSerialized = nickname.get();
-        emailSerialized = email.get();
-        postalCodeSerialized = postalCode.get();
-        githubSerialized = github.get();
+    // // Serialization methods
+    // private void writeObject(ObjectOutputStream oos) throws IOException {
+    //     nameSerialized = name.get();
+    //     surnameSerialized = surname.get();
+    //     citySerialized = city.get();
+    //     adressSerialized = adress.get();
+    //     genderSerialized = gender.get();
+    //     if (birthday.get() != null) {
+    //         birthdaySerialized = birthday.get().format(DateTimeFormatter.ISO_LOCAL_DATE);
+    //     }
+    //     phoneNumberSerialized = phoneNumber.get();
+    //     phoneNumberProfessionalSerialized = phoneNumberProfessional.get();
+    //     nicknameSerialized = nickname.get();
+    //     emailSerialized = email.get();
+    //     postalCodeSerialized = postalCode.get();
+    //     githubSerialized = github.get();
 
-        oos.defaultWriteObject();
-    }
+    //     oos.defaultWriteObject();
+    // }
 
-    private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException {
-        // lecture par défaut de tous les attributs "non-transient" (tous les attributs
-        // suffixés de "Serialized")
-        ois.defaultReadObject();
+    // private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException {
+    //     // lecture par défaut de tous les attributs "non-transient" (tous les attributs
+    //     // suffixés de "Serialized")
+    //     ois.defaultReadObject();
 
-        // intialisation des champs "StringProperty"
-        this.name = new SimpleStringProperty(nameSerialized != null ? nameSerialized : "");
-        this.surname = new SimpleStringProperty(surnameSerialized != null ? surnameSerialized : "");
-        this.city = new SimpleStringProperty(citySerialized != null ? citySerialized : "");
-        this.adress = new SimpleStringProperty(adressSerialized != null ? adressSerialized : "");
-        this.gender = new SimpleStringProperty(genderSerialized != null ? genderSerialized : "");
-        this.birthday = birthdaySerialized != null
-                ? new SimpleObjectProperty<>(LocalDate.parse(birthdaySerialized, DateTimeFormatter.ISO_LOCAL_DATE))
-                : new SimpleObjectProperty<>(null);
-        this.phoneNumber = new SimpleStringProperty(phoneNumberSerialized != null ? phoneNumberSerialized : "");
-        this.phoneNumberProfessional = new SimpleStringProperty(
-                phoneNumberProfessionalSerialized != null ? phoneNumberProfessionalSerialized : "");
-        this.nickname = new SimpleStringProperty(nicknameSerialized != null ? nicknameSerialized : "");
-        this.email = new SimpleStringProperty(emailSerialized != null ? emailSerialized : "");
-        this.postalCode = new SimpleStringProperty(postalCodeSerialized != null ? postalCodeSerialized : "");
-        this.github = new SimpleStringProperty(githubSerialized != null ? githubSerialized : "");
-    }
+    //     // intialisation des champs "StringProperty"
+    //     this.name = new SimpleStringProperty(nameSerialized != null ? nameSerialized : "");
+    //     this.surname = new SimpleStringProperty(surnameSerialized != null ? surnameSerialized : "");
+    //     this.city = new SimpleStringProperty(citySerialized != null ? citySerialized : "");
+    //     this.adress = new SimpleStringProperty(adressSerialized != null ? adressSerialized : "");
+    //     this.gender = new SimpleStringProperty(genderSerialized != null ? genderSerialized : "");
+    //     this.birthday = birthdaySerialized != null
+    //             ? new SimpleObjectProperty<>(LocalDate.parse(birthdaySerialized, DateTimeFormatter.ISO_LOCAL_DATE))
+    //             : new SimpleObjectProperty<>(null);
+    //     this.phoneNumber = new SimpleStringProperty(phoneNumberSerialized != null ? phoneNumberSerialized : "");
+    //     this.phoneNumberProfessional = new SimpleStringProperty(
+    //             phoneNumberProfessionalSerialized != null ? phoneNumberProfessionalSerialized : "");
+    //     this.nickname = new SimpleStringProperty(nicknameSerialized != null ? nicknameSerialized : "");
+    //     this.email = new SimpleStringProperty(emailSerialized != null ? emailSerialized : "");
+    //     this.postalCode = new SimpleStringProperty(postalCodeSerialized != null ? postalCodeSerialized : "");
+    //     this.github = new SimpleStringProperty(githubSerialized != null ? githubSerialized : "");
+    // }
 
     public void exportToVCard(String filePath) {
         StringBuilder vCardBuilder = new StringBuilder();
